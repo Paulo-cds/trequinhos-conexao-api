@@ -23,6 +23,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 import HomeIcon from '@material-ui/icons/Home'
 import StoreIcon from '@material-ui/icons/Store'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -88,6 +89,14 @@ const Header = () => {
               </ListItemIcon>
               <ListItemText>Lista de Produtos</ListItemText>
             </ListItem>
+            
+            <ListItem button onClick={() => handleMenuClick('products/add')}>
+              <ListItemIcon>
+                <AddCircleOutlineIcon />
+              </ListItemIcon>
+              <ListItemText>Cadastro de Produtos</ListItemText>
+            </ListItem>
+            
           </List>  
         </Drawer>
       </>

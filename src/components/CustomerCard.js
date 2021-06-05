@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState} from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -10,9 +10,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import classNames from 'classnames'
+
+import ModalConfirm from './ModalConfirm'
 
 
 
@@ -35,50 +37,74 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerCard = ({
+    id,
     name,
     category,
     description,
     urlImage,
     className,
+    onRemoveProduct,
     }) => {
 
 
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  //const [expanded, setExpanded] = useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const [openModal, setOpenModal] = useState(false)
+
+  const handleToggleOpenModal = () => {
+    setOpenModal(!openModal)
+  }
+
+ 
+
+  const handleConfirmModal = id => {
+    onRemoveProduct(id)
+    handleToggleOpenModal()
+  }
+
+  const handleRemoveCustomer = () =>{
+    handleToggleOpenModal()
+  }
 
   return (
-    <Card className={classNames(className, classes.root)}>
-      <CardHeader
+    <>
+      <Card className={classNames(className, classes.root)}>
+        <CardHeader
+          
+          title={name}
+          
+        />
+        <CardMedia
+          
+          className={classes.media}
+          image={urlImage}
+          
+        />
+        <CardContent>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {description}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <IconButton aria-label="editar cadastro">
+            <EditIcon />
+          </IconButton>
+          <IconButton aria-label="deletar cadastro" onClick={handleRemoveCustomer}>
+            <DeleteIcon />
+          </IconButton>
+          
+        </CardActions>
         
-        title={name}
-        
+      </Card>
+      <ModalConfirm 
+      open={openModal}
+      onClose={handleToggleOpenModal}
+      onConfirm={() => handleConfirmModal(id)}
+      title="Deseja realmente excluir esse produto?"
+      message="Ao comfirmar não será possível reverter essa operação!"      
       />
-      <CardMedia
-        
-        className={classes.media}
-        image={urlImage}
-        
-      />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {description}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        
-      </CardActions>
-      
-    </Card>
+    </>
   );
 }
 

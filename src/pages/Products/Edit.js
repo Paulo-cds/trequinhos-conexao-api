@@ -1,9 +1,10 @@
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import axios from 'axios'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
+import { useParams } from 'react-router-dom'
 
 import Toasty from '../../components/Toasty'
 
@@ -20,28 +21,53 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const Register = () => {
+const Edit = () => {
+    const {id} = useParams()
+    
+    console.log(`Aqui esta na pagina de editar, ${id}`)
     const classes = useStyles()
 
+    const [form, setForm] = useState({
+        name:{
+            value:'',
+            error: false,
+        },
+        category:{
+            value:'',
+            error: false,
+        },
+        description:{
+            value:'',
+            error: false,
+        },
+        urlImage:{
+            value:'',
+            error: false,
+        },
+    })
 
-const [form, setForm] = useState({
-    name:{
-        value:'',
-        error: false,
-    },
-    category:{
-        value:'',
-        error: false,
-    },
-    description:{
-        value:'',
-        error: false,
-    },
-    urlImage:{
-        value:'',
-        error: false,
-    },
-})
+    useEffect(() => {
+        axios.get (`http://localhost:8080/api/products/${id}`)
+        .then(response => {
+            const data = response.data
+
+            setForm({
+                name: data.name,
+                category: data.category,
+                description: data.description,
+                urlImage: data.urlImage,
+
+                
+            })
+            
+        })
+    }, [])
+
+
+    
+   
+
+
 
     const [openToasty, setOpenToasty] = useState(false)
 
@@ -63,13 +89,13 @@ const [form, setForm] = useState({
     }
 
     const handleRegisterButton = () => {
-        
-        
+
+
         if (!progressLoading) {            
             setprogressLoading(true);
             timer.current = window.setTimeout(() => {                
               setprogressLoading(false)
-                
+
         
 
         let hasError = false
@@ -123,13 +149,14 @@ const [form, setForm] = useState({
             setForm(newFormState)
         } else{
 
-        axios.post('http://localhost:8080/api/products',{
+        axios.put(`http://localhost:8080/api/products${id}`,{
+            
             name: form.name.value,
             category: form.category.value,
             description: form.description.value,
             urlImage: form.urlImage.value,
         }).then((response) => {
-            setOpenToasty(true)            
+            setOpenToasty(true)
             //window.location.reload()
         })
         }
@@ -164,4 +191,4 @@ const [form, setForm] = useState({
 }
 
 
-export default Register
+export default Edit

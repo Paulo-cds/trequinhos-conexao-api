@@ -4,7 +4,10 @@ import Grid from '@material-ui/core/Grid'
 import CustomerCard from '../../components/CustomerCard'
 import { makeStyles } from '@material-ui/core/styles'
 
-
+import Edit from './Edit'
+import {
+    useHistory,
+  } from 'react-router-dom'
 
 const useStyles  = makeStyles((theme)  => ({
     root:{
@@ -37,6 +40,8 @@ const Products = () => {
     }, [])
 
     //Função que remove os produtos
+
+    
     const handleRemoveProduct = id => {
         axios.delete(`http://localhost:8080/api/products/${id}`)
          .then(response => {
@@ -50,6 +55,22 @@ const Products = () => {
         })
         
          })
+    }
+
+
+    //Função que editar os produtos
+    const history = useHistory()
+
+    const handleMenuClick = (route) => {
+        history.push(route)
+      }
+
+
+    const handleEditProduct = (id) => {
+        
+
+        handleMenuClick(`products/edit/:${id}`)
+       
     }
 
     return(
@@ -66,7 +87,8 @@ const Products = () => {
                             description={item.description}
                             urlImage={item.urlImage}        
                             className= {classes.card}   
-                            onRemoveProduct={handleRemoveProduct}             
+                            onRemoveProduct={handleRemoveProduct} 
+                            onEditProduct={handleEditProduct}            
                     />
                         </Grid>
                     ))

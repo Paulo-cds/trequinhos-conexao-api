@@ -9,6 +9,7 @@ import {
 import Home from './pages/Home'
 import Products from './pages/Products/Products'
 import Register from './pages/Products/Register'
+import Edit from './pages/Products/Edit'
 
 import TemplateDefault from './pages/templates/Default'
 import TemplatePage from './pages/templates/Page'
@@ -22,6 +23,10 @@ function App() {
       <Router>
         <TemplateDefault>
         <Switch>       
+          <Route path="/products/edit">
+            <TemplatePage title='Editar Produto' Component={Edit} />
+          </Route>
+
           <Route path="/products/add">
             <TemplatePage title='Cadastro de Produtos' Component={Register} />
           </Route>

@@ -16,6 +16,9 @@ import classNames from 'classnames'
 
 import ModalConfirm from './ModalConfirm'
 
+import Edit from '../pages/Products/Edit'
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +47,7 @@ const CustomerCard = ({
     urlImage,
     className,
     onRemoveProduct,
+    onEditProduct,
     }) => {
 
 
@@ -54,17 +58,19 @@ const CustomerCard = ({
 
   const handleToggleOpenModal = () => {
     setOpenModal(!openModal)
-  }
-
- 
+  } 
 
   const handleConfirmModal = id => {
     onRemoveProduct(id)
     handleToggleOpenModal()
   }
 
-  const handleRemoveCustomer = () =>{
+  const handleRemoveProduct = () =>{
     handleToggleOpenModal()
+  }
+
+  const handleEditProduct = () =>{
+    onEditProduct(id, name, category, description, urlImage)
   }
 
   return (
@@ -87,10 +93,10 @@ const CustomerCard = ({
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="editar cadastro">
+          <IconButton aria-label="editar cadastro" onClick={handleEditProduct}>
             <EditIcon />
           </IconButton>
-          <IconButton aria-label="deletar cadastro" onClick={handleRemoveCustomer}>
+          <IconButton aria-label="deletar cadastro" onClick={handleRemoveProduct}>
             <DeleteIcon />
           </IconButton>
           

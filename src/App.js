@@ -23,7 +23,7 @@ function App() {
       <Router>
         <TemplateDefault>
         <Switch>       
-          <Route path="/products/edit">
+          <Route path="/products/edit/:id">
             <TemplatePage title='Editar Produto' Component={Edit} />
           </Route>
 

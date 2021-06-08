@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory} from 'react-router-dom'
 
 import Toasty from '../../components/Toasty'
 
@@ -23,8 +23,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Edit = () => {
     const {id} = useParams()
+    const history = useHistory()
     
     console.log(`Aqui esta na pagina de editar, ${id}`)
+
+    
     const classes = useStyles()
 
     const [form, setForm] = useState({
@@ -49,23 +52,19 @@ const Edit = () => {
     useEffect(() => {
         axios.get (`http://localhost:8080/api/products/${id}`)
         .then(response => {
-            const data = response.data
-
+            const data = response.data[0]
+            console.log(`Name da api = ${data.name} do id = ${id}`)
             setForm({
-                name: data.name,
-                category: data.category,
-                description: data.description,
-                urlImage: data.urlImage,
-
-                
+                name: {value: data.name},
+                category: {value: data.category},
+                description: {value: data.description},
+                urlImage: {value: data.urlImage},                
             })
             
         })
     }, [])
 
-
-    
-   
+    console.log(form.name.value)       
 
 
 
@@ -98,94 +97,146 @@ const Edit = () => {
 
         
 
-        let hasError = false
+                let hasError = false
 
-        let newFormState = {
-            ...form,
-        }
+                let newFormState = {
+                    ...form,
+                }
 
+                
+                if(!form.name.value){
+                    hasError = true
 
-        if(!form.name.value){
-            hasError = true
+                    newFormState.name = {
+                        value: form.name.value,
+                        error: true,
+                        helperText: 'Digite o nome corretamente'
+                    }
+                }
 
-            newFormState.name = {
-                value: form.name.value,
-                error: true,
-                helperText: 'Digite o nome corretamente'
-            }
-        }
+                if(!form.category.value){
+                    hasError = true
 
-        if(!form.category.value){
-            hasError = true
+                    newFormState.category = {
+                        value: form.category.value,
+                        error: true,
+                        helperText: 'Digite a categoria corretamente'
+                    }
+                }
 
-            newFormState.category = {
-                value: form.category.value,
-                error: true,
-                helperText: 'Digite a categoria corretamente'
-            }
-        }
+                if(!form.description.value){
+                    hasError = true
 
-        if(!form.description.value){
-            hasError = true
+                    newFormState.description = {
+                        value: form.description.value,
+                        error: true,
+                        helperText: 'Digite a descrição corretamente'
+                    }
+                }
 
-            newFormState.description = {
-                value: form.description.value,
-                error: true,
-                helperText: 'Digite a descrição corretamente'
-            }
-        }
+                if(!form.urlImage.value){
+                    hasError = true
 
-        if(!form.urlImage.value){
-            hasError = true
+                    newFormState.urlImage = {
+                        value: form.urlImage.value,
+                        error: true,
+                        helperText: 'Digite a url corretamente'
+                    }
+                }
 
-            newFormState.urlImage = {
-                value: form.urlImage.value,
-                error: true,
-                helperText: 'Digite a url corretamente'
-            }
-        }
-
-        if(hasError) {
-            setForm(newFormState)
-        } else{
-
-        axios.put(`http://localhost:8080/api/products${id}`,{
-            
-            name: form.name.value,
-            category: form.category.value,
-            description: form.description.value,
-            urlImage: form.urlImage.value,
-        }).then((response) => {
-            setOpenToasty(true)
-            //window.location.reload()
-        })
-        }
-            }, 4000)
-        }
-
+                if(hasError) {
+                    setForm(newFormState)
+                } else{
+                        
+                    axios.put(`http://localhost:8080/api/products/${id}`, 
+                    {            
+                        name: form.name.value,
+                        category: form.category.value,
+                        description: form.description.value,
+                        urlImage: form.urlImage.value,
+                    }).then((response) => {
+                        setOpenToasty(true)
+                        
+                    })
+                    }
+                    
+            }, 3000)                
+        }  
+                     
     }
+
+         
 
     return(
         <>
-        <div className={classes.wrapper}>
-            <TextField error={form.name.error} helperText={form.name.error ? form.name.helperText : ''} id="standard-basic" label="Nome" name='name' value={form.name.value} onChange={handleInputChange}/>     
-        </div>
-        <div className={classes.wrapper}>
-            <TextField error={form.category.error} helperText={form.category.error ? form.category.helperText : ''} id="standard-basic" label="Categoria" name='category' value={form.category.value} onChange={handleInputChange}/>     
-        </div>
-        <div className={classes.wrapper}>
-            <TextField error={form.description.error} helperText={form.description.error ? form.description.helperText : ''} id="standard-basic" label="Descrição" name='description' value={form.description.value} onChange={handleInputChange}/>     
-        </div>
-        <div className={classes.wrapper}>
-            <TextField error={form.urlImage.error} helperText={form.urlImage.error ? form.urlImage.helperText : ''} id="standard-basic" label="Url da imagem" name='urlImage' value={form.urlImage.value} onChange={handleInputChange}/>     
-        </div>
-        <div className={classes.wrapper}>
-                <Button variant="contained" color="primary" onClick={handleRegisterButton} disabled={progressLoading}>
-                    Cadastrar
-                </Button>
-                {progressLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            <div className={classes.wrapper}>
+                <TextField 
+                error={form.name.error} 
+                helperText={form.name.error ? form.name.helperText : ''} 
+                id="standard-basic" 
+                label="Nome" 
+                name='name' 
+                value={form.name.value} 
+                onChange={handleInputChange}/>     
             </div>
-        <Toasty open={openToasty} severity='success' text='Cadastro realizado com sucesso!' onClose={() => setOpenToasty(false)}/>
+
+            <div className={classes.wrapper}>
+                <TextField 
+                error={form.category.error} 
+                helperText={form.category.error ? form.category.helperText : ''} 
+                id="standard-basic" 
+                label="Categoria" 
+                name='category' 
+                value={form.category.value} 
+                onChange={handleInputChange}
+                />     
+            </div>
+
+            <div className={classes.wrapper}>
+                <TextField 
+                error={form.description.error} 
+                helperText={form.description.error ? form.description.helperText : ''} 
+                id="standard-basic" 
+                label="Descrição" 
+                name='description' 
+                value={form.description.value} 
+                onChange={handleInputChange}
+                />     
+            </div>
+
+            <div className={classes.wrapper}>
+                <TextField 
+                error={form.urlImage.error} 
+                helperText={form.urlImage.error ? form.urlImage.helperText : ''} 
+                id="standard-basic" 
+                label="Url da imagem" 
+                name='urlImage' 
+                value={form.urlImage.value} 
+                onChange={handleInputChange}
+                />     
+            </div>
+
+            <div className={classes.wrapper}>
+                    <Button 
+                    variant="contained" 
+                    color="primary" 
+                    onClick={handleRegisterButton} 
+                    disabled={progressLoading}>
+                        Alterar
+                    </Button>
+                    {progressLoading && <CircularProgress 
+                    size={24} 
+                    className={classes.buttonProgress} 
+                    />}
+            </div>
+
+            <Toasty 
+            open={openToasty} 
+            severity='success' 
+            text='Produto alterado com sucesso!' 
+            onClose={() => setOpenToasty(false)}            
+            />
+        
         </>
     )
 }

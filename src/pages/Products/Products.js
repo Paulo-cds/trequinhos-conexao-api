@@ -69,7 +69,7 @@ const Products = () => {
     const handleEditProduct = (id) => {
         
 
-        handleMenuClick(`products/edit/:${id}`)
+        handleMenuClick(`products/edit/${id}`)
        
     }
 

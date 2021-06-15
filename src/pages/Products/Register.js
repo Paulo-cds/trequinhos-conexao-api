@@ -4,6 +4,9 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import InputLabel from '@material-ui/core/InputLabel'
 
 import Toasty from '../../components/Toasty'
 
@@ -16,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',        
         marginTop: 5,
         marginLeft: -70,              
+    },
+    selec:{
+        minWidth: 120,
     },
   }));
 
@@ -50,6 +56,8 @@ const [form, setForm] = useState({
     const [progressLoading, setprogressLoading] = useState(false)    
     const timer = useRef()
 
+    const [cat, setCat] = useState('')
+
 
     const handleInputChange = (e) => {
         const {name, value} = e.target
@@ -61,6 +69,10 @@ const [form, setForm] = useState({
             },
         })
     }
+
+    const handleChange = (event) => {
+        setCat(event.target.value);
+      };
 
     const handleRegisterButton = () => {
         
@@ -89,11 +101,10 @@ const [form, setForm] = useState({
             }
         }
 
-        if(!form.category.value){
+        if(!cat){
             hasError = true
 
-            newFormState.category = {
-                value: form.category.value,
+            newFormState.category = {                
                 error: true,
                 helperText: 'Digite a categoria corretamente'
             }
@@ -125,7 +136,7 @@ const [form, setForm] = useState({
 
         axios.post('http://localhost:8080/api/products',{
             name: form.name.value,
-            category: form.category.value,
+            category: cat,
             description: form.description.value,
             urlImage: form.urlImage.value,
         }).then((response) => {
@@ -144,7 +155,27 @@ const [form, setForm] = useState({
             <TextField error={form.name.error} helperText={form.name.error ? form.name.helperText : ''} id="standard-basic" label="Nome" name='name' value={form.name.value} onChange={handleInputChange}/>     
         </div>
         <div className={classes.wrapper}>
-            <TextField error={form.category.error} helperText={form.category.error ? form.category.helperText : ''} id="standard-basic" label="Categoria" name='category' value={form.category.value} onChange={handleInputChange}/>     
+            
+            <InputLabel> Categoria </InputLabel>
+            <Select
+                className={classes.selec}
+                labelId="demo-simple-select-label"                
+                value={cat}
+                onChange={handleChange}
+
+                error={form.category.error} 
+                //helperText={form.category.error ? form.category.helperText : ''} 
+                id="standard-basic" 
+                label="Categoria" 
+                name='category'
+            >
+                <MenuItem value={'Corpo'}>Corpo</MenuItem>
+                <MenuItem value={'Casa'}>Casa</MenuItem>
+                <MenuItem value={'Masculino'}>Masculino</MenuItem>
+                <MenuItem value={'Resina'}>Resina</MenuItem>
+            </Select>
+
+
         </div>
         <div className={classes.wrapper}>
             <TextField error={form.description.error} helperText={form.description.error ? form.description.helperText : ''} id="standard-basic" label="Descrição" name='description' value={form.description.value} onChange={handleInputChange}/>     

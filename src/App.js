@@ -10,6 +10,7 @@ import Home from './pages/Home'
 import Products from './pages/Products/Products'
 import Register from './pages/Products/Register'
 import Edit from './pages/Products/Edit'
+import About from './pages/About'
 
 import TemplateDefault from './pages/templates/Default'
 import TemplatePage from './pages/templates/Page'
@@ -31,9 +32,13 @@ function App() {
             <TemplatePage title='Cadastro de Produtos' Component={Register} />
           </Route>
 
-          <Route path="/products">
+          <Route path="/products/:prod">
             <TemplatePage title='Produtos' Component={Products} />
-          </Route>          
+          </Route> 
+
+          <Route path="/about">
+          <TemplatePage title='Sobre' Component={About} />
+          </Route>         
 
           <Route path="/">
           <TemplatePage title='Pagina Inicial' Component={Home} />

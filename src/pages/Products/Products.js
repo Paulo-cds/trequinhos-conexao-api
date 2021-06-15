@@ -4,9 +4,11 @@ import Grid from '@material-ui/core/Grid'
 import CustomerCard from '../../components/CustomerCard'
 import { makeStyles } from '@material-ui/core/styles'
 
+
 import Edit from './Edit'
 import {
     useHistory,
+    useParams,
   } from 'react-router-dom'
 
 const useStyles  = makeStyles((theme)  => ({
@@ -21,6 +23,7 @@ const useStyles  = makeStyles((theme)  => ({
 
 
 const Products = () => {
+    const {prod} = useParams()
     const classes = useStyles()
 
     const [products, setProducts] = useState([])
@@ -33,9 +36,14 @@ const Products = () => {
         axios.get ('http://localhost:8080/api/products')
         .then(response => {
             const data = response.data
-
-
-            setProducts(data)
+            if(prod==='all'){
+                setProducts(data)
+            } else {
+                
+                const dados = data.filter(datas=>datas.category===prod)
+                console.log(`O produto é ${dados.name}`)
+                setProducts(dados)
+            }
         })
     }, [])
 
@@ -62,14 +70,14 @@ const Products = () => {
     const history = useHistory()
 
     const handleMenuClick = (route) => {
-        history.push(route)
+        history.push(route)        
       }
 
 
     const handleEditProduct = (id) => {
         
 
-        handleMenuClick(`products/edit/${id}`)
+        handleMenuClick(`edit/${id}`)
        
     }
 

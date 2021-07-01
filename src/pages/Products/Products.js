@@ -3,7 +3,7 @@ import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
 import CustomerCard from '../../components/CustomerCard'
 import { makeStyles } from '@material-ui/core/styles'
-
+//import {Name, Password} from '../Admin'
 
 import Edit from './Edit'
 import {
@@ -16,8 +16,10 @@ const useStyles  = makeStyles((theme)  => ({
         flexGrow:1,
     },
     card: {
-        padding: theme.spacing(2),
-        
+        padding: theme.spacing(2),        
+    },
+    items: {
+        alignContent: 'center',
     }
 }))
 
@@ -27,24 +29,26 @@ const Products = () => {
     const classes = useStyles()
 
     const [products, setProducts] = useState([])
-
-    console.log(products)
-
-
+    
+    console.log(prod)
+    //Tentar colocar /antes do caminho pra selecionar o tipo de produto que quer
     //função que faz o get dos produtos
     useEffect(() => {
         axios.get ('http://localhost:8080/api/products')
         .then(response => {
             const data = response.data
-            if(prod==='all'){
+            if(prod==='all' || prod ==='admin'){
                 setProducts(data)
             } else {
                 
                 const dados = data.filter(datas=>datas.category===prod)
-                console.log(`O produto é ${dados.name}`)
+                
                 setProducts(dados)
             }
         })
+
+        
+
     }, [])
 
     //Função que remove os produtos
@@ -80,28 +84,30 @@ const Products = () => {
         handleMenuClick(`edit/${id}`)
        
     }
+   
+   //console.log(`usuario esta - ${Name} - password ${Password}`)
 
     return(
         <>                                 
-
-            <Grid container>
-                {
-                    products.map(item => (
-                        <Grid item xs={12} md={4} xl={2}>
-                            <CustomerCard 
-                            id = {item._id}
-                            name={item.name}
-                            category={item.category}
-                            description={item.description}
-                            urlImage={item.urlImage}        
-                            className= {classes.card}   
-                            onRemoveProduct={handleRemoveProduct} 
-                            onEditProduct={handleEditProduct}            
-                    />
-                        </Grid>
-                    ))
-                }
-           </Grid>
+            <Grid container className={classes.items}>
+            {
+                products.map(item => (
+                    <Grid item xs={12} md={4} xl={2}>
+                        <CustomerCard 
+                        id = {item._id}
+                        name={item.name}
+                        category={item.category}
+                        description={item.description}
+                        urlImage={item.urlImage}        
+                        className= {classes.card}   
+                        onRemoveProduct={handleRemoveProduct} 
+                        onEditProduct={handleEditProduct}            
+                />
+                    </Grid>
+                ))
+            }
+            </Grid>
+        
         </>
     )
 }

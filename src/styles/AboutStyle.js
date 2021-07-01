@@ -15,11 +15,16 @@ export const perfil = styled.img`
 export const Tittle = styled.h3`
     text-align: center;
     margin: 15px auto;
+    font-size: 2rem;
 `
 
 export const  sobre = styled.div`
     text-align: center;
     align-items:center;
     padding: 0 10%;
-    height: 90vh;
+    min-height: 100vh;
+`
+
+export const aval = styled.div`
+    margin: 8rem auto 2rem;
 `

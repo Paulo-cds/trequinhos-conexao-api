@@ -27,7 +27,6 @@ import SearchIcon from '@material-ui/icons/Search'
 import HomeIcon from '@material-ui/icons/Home'
 import StoreIcon from '@material-ui/icons/Store'
 import InfoIcon from '@material-ui/icons/Info'
-import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import InstagramIcon from '@material-ui/icons/Instagram'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
@@ -38,6 +37,14 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import { useLocation } from 'react-router-dom'
+import Collapse from '@material-ui/core/Collapse'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import Insta from '../../images/instagram.png'
+import Face from '../../images/facebook.png'
+
+
+const drawerWidth = 200
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -49,13 +56,48 @@ const useStyles = makeStyles(() => ({
       padding: '0',
       color: 'white',
     },
-    links: {
-      width: '10%',
-      margin: '0',
+    insta: {
+      width: '2rem',      
+      position: 'absolute',
+      right: '0.2rem',
+      margin: '0 0.2rem',
+      color: 'white',
+    },
+    face: {
+      width: '2rem',      
+      position: 'absolute',
+      right: '3rem',
+      margin: '0 0.2rem'
     },
     divisao:{
       display:'flex',
-    }
+      
+    },
+    drawerPaper: {
+      height: 'fit-content',
+    },
+    drawerHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: (0, 1),
+      // necessary for content to be below app bar
+      
+      justifyContent: 'flex-end',
+      width: 'fit-content',
+    },
+    drawer: {
+      width: drawerWidth,
+      height: 'fit-content',
+      //flexShrink: 0,
+      //marginLeft:50,
+      position: 'relative',
+      left: 30,
+      //marginTop: 30,
+      //display: 'none',      
+    },
+    root: {
+      flexGrow: 1,
+    },
 }))
 
 
@@ -70,59 +112,75 @@ const Header = () => {
 
     const [menuOpen, setMenuOpen] = useState(false)
     const [subMenuOpen, setSubMenuOpen] = useState(false)
-
+    //classes.drawer = subMenuOpen
     const handleToggleMenu = () => {
       setMenuOpen(!menuOpen)
+      if (subMenuOpen){
+        setSubMenuOpen(!subMenuOpen)
+      }
+    }
+
+    const handleSubMenu = () => {
+      setSubMenuOpen(!subMenuOpen)   
+      setOpen(!open)   
     }
     
     const handleMenuClick = route => {      
       history.push(route)
-      handleToggleMenu()      
+      handleToggleMenu()  
+           
     }
     
 
     const handleToggleSubMenu = (event) => {
-      setSubMenuOpen(!subMenuOpen)
+      setSubMenuOpen(!subMenuOpen )
+      //document.querySelector(classes.drawer).style.display ='block'
     }
    
 
     const handleClose = (pgr) => {     
       
-      if(location.pathname.match('products')){
+      if(location.pathname.match('/products')){
         handleMenuClick(`${pgr}`)
         window.location.reload()
       } else {
-        handleMenuClick(`products/${pgr}`)
+        handleMenuClick(`/products/${pgr}`)
       }
            
-      setSubMenuOpen(false)
+      
     }
     
+    const [open, setOpen] = useState(true)
 
 
     return(
       <>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={() => handleToggleMenu()}>
-              <MenuIcon />
-            </IconButton>
-            <Typography  className = {classes.title} variant="h6" noWrap>
-              Trequinhos
-            </Typography>
-            <div className = {classes.divisao}>
-              <a className = {classes.links} href="https://bit.ly/3oJJjIE" target="_blank" >
-                <WhatsAppIcon className = {classes.social}/>
-              </a>
-              <a className = {classes.links} href="https://www.facebook.com/trequinhosecoisaetal" target="_blank">
-                <FacebookIcon  className = {classes.social}/>
-              </a>
-              <a className = {classes.links} href="https://www.instagram.com/trequinhosecoisaetal/" target="_blank">
-                <InstagramIcon  className = {classes.social}/>
-              </a>
-            </div>
-          </Toolbar>
-        </AppBar>
+
+        <div className={classes.root}>
+          <AppBar position="static">
+            <Toolbar>
+              <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => handleToggleMenu()}>
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" className={classes.title}>
+                
+              </Typography>
+               {/* <div className = {classes.divisao}>                */}
+                <a className = {classes.face} href="https://www.facebook.com/trequinhosecoisaetal" target="_blank">
+                  <img src={Face} alt={'Facebook'}  className = {classes.social}/>
+                </a>
+                <a className = {classes.insta} href="https://www.instagram.com/trequinhosecoisaetal/" target="_blank">
+                  <img src={Insta} alt={'Instagram'} className = {classes.social}/>
+                </a>
+              {/* </div>  */}
+            </Toolbar>
+          </AppBar>
+        </div>
+
+
+
+
+        
         <Drawer open={menuOpen} onClose={() => handleToggleMenu()}>
           <List>
             <ListItem button onClick={() => handleMenuClick('/')}>
@@ -139,27 +197,57 @@ const Header = () => {
               <ListItemText>Sobre</ListItemText>
             </ListItem>
 
-            <ListItem button onClick={handleToggleSubMenu} aria-controls="simple-menu" aria-haspopup="true"   //{() => handleMenuClick('/products')}
-          >
+            <ListItem button 
+            onClick={() => handleSubMenu()} 
+            //aria-controls="simple-menu" 
+            //aria-haspopup="true"   
+            //{() => handleMenuClick('/products')}
+            >
               <ListItemIcon>
                 <StoreIcon />
               </ListItemIcon>
               <ListItemText >Lista de Produtos</ListItemText>
-
-              <Menu
-                id="simple-menu"
+              
+            </ListItem>
+              <Collapse
+                //id="simple-menu"
                 //anchorEl={anchorEl}
                 keepMounted
+                in={subMenuOpen}
                 //open={Boolean(anchorEl)}
-                open={subMenuOpen}
+                //open={subMenuOpen}
+                //onClose = {() => handleToggleSubMenu()} 
+                //onClick={() => handleToggleSubMenu()}
+                className={classes.drawer}
+                //variant="persistent"
+                //anchor="left"                
+                /*classes={{
+                  paper: classes.drawerPaper,
+                }}*/
               >
-                <MenuItem onClick={()=>handleClose('Corpo')} >Para o Corpo</MenuItem>
-                <MenuItem onClick={()=>handleClose('Casa')}>Para a Casa</MenuItem>
-                <MenuItem onClick={()=>handleClose('Masculino')}>Masculino</MenuItem>
-                <MenuItem onClick={()=>handleClose('Resina')}>Resina</MenuItem>
-                <MenuItem onClick={()=>handleClose('all')}>Todos os produtos</MenuItem>
-              </Menu>
-            </ListItem>
+                <List component="div" disablePadding>                
+                  <ListItem button onClick={()=>handleClose('Corpo')} >
+                    <ListItemText>Para o Corpo </ListItemText>                   
+                  </ListItem>
+
+                  <ListItem button onClick={()=>handleClose('Casa')}>
+                  <ListItemText>Para a Casa</ListItemText>
+                  </ListItem>
+
+                  <ListItem button onClick={()=>handleClose('Masculino')}>
+                    <ListItemText>Masculino</ListItemText>
+                  </ListItem>
+
+                  <ListItem button onClick={()=>handleClose('Resina')}>
+                    <ListItemText>Resina</ListItemText>
+                  </ListItem>
+
+                  <ListItem button onClick={()=>handleClose('all')}>
+                    <ListItemText>Todos os produtos</ListItemText>
+                  </ListItem>
+                </List>
+              </Collapse>
+            
             
             <ListItem button onClick={() => handleClose('add')}>
               <ListItemIcon>

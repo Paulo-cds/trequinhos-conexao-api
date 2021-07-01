@@ -8,16 +8,15 @@ const useStyles = makeStyles (() => ({
         height: '50px',
         margin: '0',
         backgroundColor: 'black',
-        color: 'white',
+        color: '#dfe4e6',
         textAlign: 'center',        
     },
     texto:{        
-        margin: '1% auto 0 auto',
-        color: 'white',
+        margin: '50 auto 0 auto',
+        color: '#dfe4e6',
+        paddingTop: 10,
         textDecoration: 'none',
-        alignItems: 'center',
-        position:'absolute',
-        
+        //position: 'relative',
     }
 }))
 

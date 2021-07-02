@@ -8,13 +8,16 @@ import Whats from '../../images/whats.PNG'
 import {RubberBand} from 'animate-css-styled-components'
 
 
+
+
 const useStyles = makeStyles(() => ({
     title: {
-        marginBottom: '2.5rem',
+        marginBottom: '1rem',
     },
     text: {
         textAlign: 'center',
-        marginTop: '-40rem',
+        margin: '-7rem 0 7rem',
+        //minHeight: '50vh'
     },
     whats:{
         height: '4rem',
@@ -23,7 +26,9 @@ const useStyles = makeStyles(() => ({
         bottom: '2rem',
         right: '1rem',
         borderRadius: '100%',
+        zIndex: 2,
     },
+   
    
 }))
 
@@ -41,9 +46,8 @@ const Page = ({title, Component}) => {
                 </div>
                 <div>
                 <a href="https://bit.ly/3oJJjIE" target="_blank" >
-                    <img src={Whats} alt='Logo whatsaap' className = {classes.whats}/>
+                    <img src={Whats} alt='Logo whatsaap' className = {classes.whats}/>                    
                 </a>
-
                 </div>                            
             </Typography>
             <Component />

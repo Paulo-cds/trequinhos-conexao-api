@@ -24,9 +24,11 @@ import prod from '../pages/Products/Products'
 const token = localStorage.getItem('token')
 
 let editors = 'none'
-if(token){
+if(token ===  'true'){
   editors = 'flex'
-} 
+} else {
+  editors = 'none'
+}
 
 const useStyles = makeStyles((theme) => ({
   editors:{

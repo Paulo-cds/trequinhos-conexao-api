@@ -13,10 +13,10 @@ const useStyles = makeStyles(() => ({
     container: {
         padding: '15px 20px 6rem',
         backgroundColor: '#dfe4e6',
-        //minHeight: '100vh',       
+        minHeight: '50vh',       
     },
     body: {
-        //minHeight: '100vh',
+        //height: '50vh',
         //height: 'fit-content',
     }
 }))

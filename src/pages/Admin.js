@@ -5,14 +5,35 @@ import Button from '@material-ui/core/Button'
 import { useHistory } from 'react-router';
 //import HandleButton from './partials/Login'
 import StoreContext from '../components/store/Context';
+import {RubberBand} from 'animate-css-styled-components'
+
+const token = localStorage.getItem('token')
+
+let editors, title = ''
+if(token === 'true'){
+  editors = 'none' 
+  title = 'block'
+} else {
+  editors = 'block'
+  title = 'none'
+}
+
+
 
 const useStyles = makeStyles((theme) => ({
+    title:{
+      display: title,
+      margin: '10rem auto',
+      fontSize: '3rem',
+      textAlign: 'center',
+    },
     root: {
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
         width: '25ch',
       },
-      margin: '0 auto'
+      margin: '0 auto',
+      display: editors,
     },
   }));
 
@@ -74,7 +95,8 @@ function Admin(){
 
         if(user === 'Fernanda' && password === 'nos141212'){
           localStorage.setItem('token', admin)
-          return history.push('/')
+          window.location.reload()          
+          return
         }
 
         alert('Usuário e/ou senha incorreto(s)')
@@ -85,6 +107,10 @@ function Admin(){
     
 
     return(        
+      <>
+        <RubberBand >
+          <h2 className={classes.title}> BEM-VINDO </h2>
+        </RubberBand>
         <form className={classes.root} noValidate autoComplete="off" onSubmit={onSubmit}>
             <div>
                 <TextField
@@ -101,6 +127,7 @@ function Admin(){
                 <TextField
                 id="standard-multiline-flexible"
                 label="Senha"
+                type='password'
                 multiline
                 rowsMax={4}
                 value={form.password.value}
@@ -112,6 +139,7 @@ function Admin(){
                 Acessar
             </Button>
         </form>
+      </>
     )
 }
 

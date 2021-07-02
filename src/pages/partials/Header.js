@@ -42,9 +42,19 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import Insta from '../../images/instagram.png'
 import Face from '../../images/facebook.png'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 
 const drawerWidth = 200
+
+const token = localStorage.getItem('token')
+
+let editors = 'none'
+if(token === 'true'){
+  editors = 'flex' 
+} else {
+  editors = 'none'
+}
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -96,7 +106,10 @@ const useStyles = makeStyles(() => ({
       //display: 'none',      
     },
     root: {
-      flexGrow: 1,
+      flexGrow: 1,      
+    },
+    cad: {
+      display: editors,
     },
 }))
 
@@ -148,6 +161,14 @@ const Header = () => {
       }
            
       
+    }
+
+    const handleExit = () => {
+      const admin = false
+      localStorage.setItem('token', admin)
+      window.location.reload()
+      handleToggleMenu()
+         
     }
     
     const [open, setOpen] = useState(true)
@@ -249,11 +270,18 @@ const Header = () => {
               </Collapse>
             
             
-            <ListItem button onClick={() => handleClose('add')}>
+            <ListItem className={classes.cad} button onClick={() => handleClose('add')}>
               <ListItemIcon>
                 <AddCircleOutlineIcon />
               </ListItemIcon>
-              <ListItemText>Cadastro de Produtos</ListItemText>              
+              <ListItemText >Cadastro de Produtos</ListItemText>              
+            </ListItem>
+
+            <ListItem className={classes.cad} button onClick={() => handleExit()}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText >Sair</ListItemText>              
             </ListItem>
             
           </List>  

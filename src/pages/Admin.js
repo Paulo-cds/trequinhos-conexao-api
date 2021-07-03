@@ -41,16 +41,7 @@ const useStyles = makeStyles((theme) => ({
   function initialState() {
     return { user: '', password: '' };
   }
-
-
-  /* const login = ({user, password}) => {
-    if(user === 'Fernanda' && password === 'nos141212'){ 
-      return{token: '1234s'}
-    }
-    return {error: 'true'}
-      
-      
-  }    */ 
+  
       
 
 function Admin(){

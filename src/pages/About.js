@@ -4,6 +4,9 @@ import perfil from '../images/perfil.jpg'
 
 import * as S from '../styles/AboutStyle'
 
+import Img3 from '../images/imagem3.jpg'
+import Img4 from '../images/imagem4.jpg'
+
 import {
     //Tittle,
     //sobre,
@@ -36,12 +39,12 @@ import {
    {
      label: '',
      imgPath:
-       'https://scontent.fubt2-1.fna.fbcdn.net/v/t1.6435-9/170142423_283417893362508_4053100304321035394_n.jpg?_nc_cat=101&ccb=1-3&_nc_sid=a26aad&_nc_ohc=MeDkXncUrBoAX9QNyFg&_nc_ht=scontent.fubt2-1.fna&oh=0025c8c758405a567f3305fd2f97afaa&oe=60E09E3E',
+       {Img3},
    },
    {
      label: '',
      imgPath:
-       'https://scontent.fubt2-1.fna.fbcdn.net/v/t1.6435-9/199050101_328991105471853_6963530686327284014_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=a26aad&_nc_ohc=gCcCfFL3lV4AX_KfYry&_nc_ht=scontent.fubt2-1.fna&oh=ca15778f0f9505b1058372c00c998e56&oe=60E08F46',
+       {Img4},
    },
    {
      label: '',

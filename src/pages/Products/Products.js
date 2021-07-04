@@ -34,7 +34,7 @@ const Products = () => {
     //Tentar colocar /antes do caminho pra selecionar o tipo de produto que quer
     //função que faz o get dos produtos
     useEffect(() => {
-        axios.get ('http://localhost:8080/api/products')
+        axios.get ('https://api-trequinhos.herokuapp.com/')/* ('http://localhost:8080/api/products') */
         .then(response => {
             const data = response.data
             if(prod==='all' || prod ==='admin'){
@@ -55,10 +55,10 @@ const Products = () => {
 
     
     const handleRemoveProduct = id => {
-        axios.delete(`http://localhost:8080/api/products/${id}`)
+        axios.delete (`https://api-trequinhos.herokuapp.com/${id}`)   /* (`http://localhost:8080/api/products/${id}`) */
          .then(response => {
              
-            axios.get ('http://localhost:8080/api/products')
+            axios.get ('https://api-trequinhos.herokuapp.com/')/* ('http://localhost:8080/api/products') */
              .then(response => {
             const data = response.data
 

@@ -134,7 +134,7 @@ const [form, setForm] = useState({
             setForm(newFormState)
         } else{
 
-        axios.post('http://localhost:8080/api/products',{
+        axios.post ('https://api-trequinhos.herokuapp.com/', /* ('http://localhost:8080/api/products', */{
             name: form.name.value,
             category: cat,
             description: form.description.value,

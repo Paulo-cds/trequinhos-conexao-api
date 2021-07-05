@@ -54,7 +54,7 @@ function Admin(){
     //const [user, setUser] = useState('')
     //const [password, setPassword] = useState('')
     const classes = useStyles()
-    //const [admin, setAdmin] = useState(false)
+    const [admin, setAdmin] = useState(false)
     
     const [form, setForm] = useState ({
       user:{
@@ -86,7 +86,7 @@ function Admin(){
         password = form.password.value                     
         const admin = true
 
-        if(user === process.env.administ && password === process.env.senha){
+        if(user === administ && password === senha){
           localStorage.setItem('token', admin)
           window.location.reload()          
           return

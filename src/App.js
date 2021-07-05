@@ -19,10 +19,10 @@ import StoreProvider from './components/store/Provider'
 import './App.css';
 
 
-import dotenv from 'dotenv'
+//import dotenv from 'dotenv'
 
 
-dotenv.config()
+//dotenv.config()
 
 
 function App() {

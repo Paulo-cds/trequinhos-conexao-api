@@ -17,7 +17,13 @@ import TemplatePage from './pages/templates/Page'
 import StoreProvider from './components/store/Provider'
 
 import './App.css';
-require('dotenv').config()
+
+
+import dotenv from 'dotenv'
+
+
+dotenv.config()
+
 
 function App() {
   return (

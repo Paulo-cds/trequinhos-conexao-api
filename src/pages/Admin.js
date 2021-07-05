@@ -55,6 +55,9 @@ function Admin(){
     //const [password, setPassword] = useState('')
     const classes = useStyles()
     const [admin, setAdmin] = useState(false)
+
+
+    console.log(administ, senha)
     
     const [form, setForm] = useState ({
       user:{

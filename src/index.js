@@ -8,6 +8,11 @@ import deepPurple from '@material-ui/core/colors/deepPurple'
 import teal from '@material-ui/core/colors/teal'
 
 
+import dotenv from 'dotenv'
+
+
+dotenv.config()
+
 const theme = createMuiTheme({
   palette: {
     primary: {

@@ -7,6 +7,8 @@ import { useHistory } from 'react-router';
 import StoreContext from '../components/store/Context';
 import {RubberBand} from 'animate-css-styled-components'
 
+import {administ, senha} from '../.env'
+
 const token = localStorage.getItem('token')
 
 let editors, title = ''
@@ -84,7 +86,7 @@ function Admin(){
         password = form.password.value                     
         const admin = true
 
-        if(user === 'Fernanda' && password === 'nos141212'){
+        if(user === administ && password === senha){
           localStorage.setItem('token', admin)
           window.location.reload()          
           return

@@ -86,7 +86,7 @@ function Admin(){
         password = form.password.value                     
         const admin = true
 
-        if(user === administ && password === senha){
+        if(user === process.env.administ && password === process.env.senha){
           localStorage.setItem('token', admin)
           window.location.reload()          
           return

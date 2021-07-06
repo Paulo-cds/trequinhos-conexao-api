@@ -7,7 +7,7 @@ import { useHistory } from 'react-router';
 import StoreContext from '../components/store/Context';
 import {RubberBand} from 'animate-css-styled-components'
 
-import {administ, senha} from '../.env'
+
 
 const token = localStorage.getItem('token')
 
@@ -56,8 +56,8 @@ function Admin(){
     const classes = useStyles()
     const [admin, setAdmin] = useState(false)
 
+    
 
-    console.log(administ, senha)
     
     const [form, setForm] = useState ({
       user:{
@@ -89,7 +89,7 @@ function Admin(){
         password = form.password.value                     
         const admin = true
 
-        if(user === administ && password === senha){
+        if(user === process.env.REACT_APP_ADMINIST && password === process.env.REACT_APP_SENHA){
           localStorage.setItem('token', admin)
           window.location.reload()          
           return

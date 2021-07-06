@@ -8,10 +8,11 @@ import deepPurple from '@material-ui/core/colors/deepPurple'
 import teal from '@material-ui/core/colors/teal'
 
 
-/* import dotenv from 'dotenv'
 
+/* export const administ = process.env.administ
 
-dotenv.config() */
+export const senha = process.env.senha */
+
 
 const theme = createMuiTheme({
   palette: {

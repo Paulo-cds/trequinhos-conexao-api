@@ -7,6 +7,13 @@ import { useHistory } from 'react-router';
 import StoreContext from '../components/store/Context';
 import {RubberBand} from 'animate-css-styled-components'
 
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import Visibility from '@material-ui/icons/Visibility'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import IconButton from '@material-ui/core/IconButton'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
+import Input from '@material-ui/core/Input'
+
 
 
 const token = localStorage.getItem('token')
@@ -100,6 +107,10 @@ function Admin(){
         
     }
 
+    const handleClickShowPassword = () => {
+      setValues({ ...values, showPassword: !values.showPassword });
+    };
+
     
 
     return(        
@@ -121,14 +132,15 @@ function Admin(){
             </div>
             <div>
                 <TextField
-                id="standard-multiline-flexible"
-                label="Senha"
-                type='password'
-                multiline
-                rowsMax={4}
-                value={form.password.value}
-                onChange={onChange}
-                name="password"
+                    id="standard-multiline-flexible"
+                    label="Senha"                
+                    type='password'
+                    htmlFor="standard-adornment-password"
+                    multiline
+                    rowsMax={4}
+                    value={form.password.value}
+                    onChange={onChange}
+                    name="password"
                 />
             </div>
             <Button type='submit' variant="contained" color="primary">

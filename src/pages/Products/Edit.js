@@ -51,7 +51,7 @@ const Edit = () => {
     })
 
     useEffect(() => {
-        axios.get  (`https://api-trequinhos.herokuapp.com/${id}`) /* (`http://localhost:8080/api/products/${id}`) */
+        axios.get  (`https://banco-trequinhos.herokuapp.com/${id}`) /* (`http://localhost:8080/api/products/${id}`) */
         .then(response => {
             const data = response.data[0]
             console.log(`Name da api = ${data.name} do id = ${id}`)
@@ -153,7 +153,7 @@ const Edit = () => {
                     setForm(newFormState)
                 } else{
                         
-                    axios.put (`https://api-trequinhos.herokuapp.com/${id}`,  /* (`http://localhost:8080/api/products/${id}`, */ 
+                    axios.put (`https://banco-trequinhos.herokuapp.com/${id}`,  /* (`http://localhost:8080/api/products/${id}`, */ 
                     {            
                         name: form.name.value,
                         category: cat,

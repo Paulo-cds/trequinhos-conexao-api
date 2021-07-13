@@ -1,0 +1,14 @@
+.text {
+    margin: 8% auto;
+    width: 70%;
+    text-align: center;
+    font-size: 1.3rem;
+    font-family: Roboto;
+    border-radius: 5px;
+    box-shadow: 0 0 3px grey;
+    padding: 1%;
+
+    @media(max-width: 500px){
+        width: 80%;
+    }
+  }

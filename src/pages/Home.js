@@ -107,7 +107,7 @@ function Home () {
       
       <div className={classes.root}>
         <FadeInUpBig duration='2.5s' delay='0.1s'>
-          <p className='text'>
+          <p className='textp'>
           Aqui você acontra cosméticos artesanais desde sabonetes e desodorantes até cremes esfoliantes, e também produtos feitos em resina como Bijuterias, Incensários, Luminárias e muito mais!
           <p>
           Venha conhecer todos os nossos produtos e entre em contato para fazer seu pedido.

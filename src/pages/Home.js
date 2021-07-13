@@ -23,6 +23,7 @@ import image9 from '../images/imagem9.jpg'
 import image10 from '../images/imagem10.jpg'
 
 import {FadeInUpBig} from 'animate-css-styled-components'
+import { BorderBottomOutlined } from '@material-ui/icons';
 
 
 
@@ -82,6 +83,16 @@ const useStyles = makeStyles((theme) => ({
     //marginTop: 150,
     //backgroundColor: theme.palette.background.paper,
   },
+  text: {
+    margin: '8% auto',
+    maxWidth: '70%',
+    textAlign: 'center',
+    fontSize: '1.3rem',
+    fontFamily: 'Roboto',
+    borderRadius: '5px',
+    boxShadow: '0 0 3px grey',
+    padding: '1%',
+  }
   
 }));
 
@@ -106,8 +117,12 @@ function Home () {
       <div className={classes.root}>
         <FadeInUpBig duration='2.5s' delay='0.1s'>
           <p className={classes.text}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+          Aqui você acontra cosméticos artesanais desde sabonetes e desodorantes até cremes esfoliantes, e também produtos feitos em resina como Bijuterias, Incensários, Luminárias e muito mais!
+          <p>
+          Venha conhecer todos os nossos produtos e quando se interessar ou tiver dúvidas por algum entre em contato que te explicamos o que for preciso.
+          </p>       
           </p>   
+          
         </FadeInUpBig>                          
       </div>
      

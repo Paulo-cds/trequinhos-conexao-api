@@ -1,0 +1,13 @@
+
+
+
+.text {
+    text-align: center;
+    margin: -4rem 0 7rem;
+
+    @media(max-width: 500px){
+        margin: -7rem 0 7rem;
+    }
+    
+    
+}

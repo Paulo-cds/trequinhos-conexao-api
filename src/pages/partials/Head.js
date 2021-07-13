@@ -16,8 +16,8 @@ const useStyles = makeStyles(() => ({
         
     },    
     logo: {
-        width: '14rem',
-        margin: '2rem auto' ,        
+        width: '17rem',
+        margin: '1rem auto 2rem' ,        
         /* borderRadius: '100%',
         boxShadow: '2px 2px 3px white', */
     }

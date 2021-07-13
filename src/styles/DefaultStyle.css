@@ -1,0 +1,13 @@
+
+
+.container {
+    padding: 15px 20px 6rem;
+    background-color: #dfe4e6;
+    min-height: 50vh;
+    width: 100%;
+
+
+    @media(min-width: 1000px){
+    width: 100%;
+    }
+}

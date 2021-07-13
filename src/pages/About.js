@@ -4,8 +4,11 @@ import perfil from '../images/perfil.jpg'
 
 import * as S from '../styles/AboutStyle'
 
-import Img3 from '../images/imagem3.jpg'
-import Img4 from '../images/imagem4.jpg'
+import Img3 from '../images/av3.jpeg'
+import Img4 from '../images/av4.jpeg'
+import Img5 from '../images/av5.jpeg'
+import Img6 from '../images/av6.jpeg'
+import Img7 from '../images/av7.jpeg'
 
 import {
     //Tittle,
@@ -28,37 +31,32 @@ import {
  const tutorialSteps = [
    {
      label: '',
-     imgPath:
-       'https://scontent.fubt2-1.fna.fbcdn.net/v/t1.6435-9/204253101_327243838979913_8130571153715559543_n.jpg?_nc_cat=109&ccb=1-3&_nc_sid=a26aad&_nc_ohc=z6mNKgX-PSAAX__tOkm&_nc_ht=scontent.fubt2-1.fna&oh=9b16145a42fc720a83b6f5ffed2fe297&oe=60E14B84',
+     imgPath: Img5,
    },
    {
      label: '',
-     imgPath:
-       'https://scontent.fubt2-1.fna.fbcdn.net/v/t1.6435-9/172702222_287635809607383_4781564641135775517_n.jpg?_nc_cat=109&ccb=1-3&_nc_sid=a26aad&_nc_ohc=XDVJSfQTjTYAX_mUJ9V&_nc_ht=scontent.fubt2-1.fna&oh=bb661f66aecabe8ea502e78eb23b6694&oe=60E17FD7',
+     imgPath: Img6,
    },
    {
      label: '',
-     imgPath:
-       {Img3},
+     imgPath: Img3,
    },
    {
      label: '',
-     imgPath:
-       {Img4},
+     imgPath: Img4,
    },
    {
      label: '',
-     imgPath:
-       'https://scontent.fubt2-1.fna.fbcdn.net/v/t1.6435-9/174800339_288331916204439_2171936338854003043_n.jpg?_nc_cat=110&ccb=1-3&_nc_sid=a26aad&_nc_ohc=D4LNMdgb25oAX-Q2qmZ&_nc_ht=scontent.fubt2-1.fna&oh=4849b8da05724ba7b202436b60943e18&oe=60E12B49',
+     imgPath: Img7,
    },
  ];
  
  const useStyles = makeStyles((theme) => ({
    root: {
-     maxWidth: '30rem',
-     maxHeight: '30rem',
+     maxWidth: '25rem',
+     maxHeight: '25rem',
      flexGrow: 1,
-     margin: '7rem auto',
+     margin: '3rem auto 7rem',
    },
    header: {
      display: 'flex',
@@ -72,6 +70,7 @@ import {
      display: 'block',    
      overflow: 'hidden',
      width: '100%',
+     marginBottom: 0,
    },
  }));
 
@@ -111,9 +110,9 @@ function About(){
 
 
             <S.aval>
-            <S.Tittle>
-                Avaliações
-            </S.Tittle>
+              <S.Tittle>
+                  Avaliações
+              </S.Tittle>
             
               <div className={classes.root}>
                   <Paper square elevation={0} className={classes.header}>
@@ -151,8 +150,8 @@ function About(){
                       </Button>
                       }
                   />
-                  </div>
-                </S.aval>
+              </div>
+            </S.aval>
         </S.sobre>
     )
 }

@@ -6,19 +6,25 @@ import { makeStyles } from '@material-ui/core/styles'
 import Whats from '../../images/whats.PNG'
 
 import {RubberBand} from 'animate-css-styled-components'
-
+import '../../styles/PageStyle.css'
 
 
 
 const useStyles = makeStyles(() => ({
     title: {
         marginBottom: '1rem',
+        
     },
-    text: {
+    /* text: {
         textAlign: 'center',
-        margin: '-7rem 0 7rem',
+        margin: '-4rem 0 7rem',
+
+        query(minWidth: '500px'){
+            margin: '-7rem 0 7rem',
+        }
+        
         //minHeight: '50vh'
-    },
+    }, */
     whats:{
         height: '4rem',
         width: '4rem',  
@@ -37,7 +43,7 @@ const Page = ({title, Component}) => {
     const classes = useStyles()
     return(
         <>
-            <Typography variant='h3' className = {classes.text}>
+            <Typography variant='h3' className = 'text'>
                 <div className = {classes.title}>
                 <RubberBand duration='2s' delay='0.5s'>
                     {title}  

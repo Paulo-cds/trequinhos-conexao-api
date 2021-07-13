@@ -100,7 +100,8 @@ function Admin(){
           localStorage.setItem('token', admin)
           window.location.reload()          
           return
-        }
+        } /* Next tbm tem iisso
+        NEXT_PUBLIC_VARIAVEL */
 
         alert('Usuário e/ou senha incorreto(s)')
         setValues(initialState)

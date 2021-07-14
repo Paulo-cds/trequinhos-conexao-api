@@ -10,21 +10,18 @@ import '../../styles/PageStyle.css'
 
 
 
+import logo from '../../images/logo.PNG'
+
+
 const useStyles = makeStyles(() => ({
     title: {
         marginBottom: '1rem',
         
     },
-    /* text: {
-        textAlign: 'center',
-        margin: '-4rem 0 7rem',
-
-        query(minWidth: '500px'){
-            margin: '-7rem 0 7rem',
-        }
+    text: {
         
-        //minHeight: '50vh'
-    }, */
+        minHeight: '100vh'
+    }, 
     whats:{
         height: '4rem',
         width: '4rem',  
@@ -34,6 +31,24 @@ const useStyles = makeStyles(() => ({
         borderRadius: '100%',
         zIndex: 2,
     },
+
+
+    head: {
+        
+        width: '100%',
+        //height: '50vh',
+        display: 'block',
+        padding: 0,
+        alignItems: 'center',   
+        textAlign: 'center',
+        
+    },    
+    logo: {
+        width: '17rem',
+        margin: '1rem auto 2rem' ,        
+        /* borderRadius: '100%',
+        boxShadow: '2px 2px 3px white', */
+    }
    
    
 }))
@@ -44,10 +59,16 @@ const Page = ({title, Component}) => {
     return(
         <>
             <Typography variant='h3' className = 'text'>
+
+                <div className = {classes.head}>
+                    <img src={logo} alt='Logo' className = {classes.logo}/>
+
+                </div>
+
                 <div className = {classes.title}>
-                <RubberBand duration='2s' delay='0.5s'>
-                    {title}  
-                </RubberBand> 
+                    <RubberBand duration='2s' delay='0.5s'>
+                        {title}  
+                    </RubberBand> 
                                  
                 </div>
                 <div>

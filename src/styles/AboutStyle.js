@@ -21,8 +21,7 @@ export const Tittle = styled.h3`
 export const  sobre = styled.div`
     text-align: center;
     align-items:center;
-    padding: 0 10% 5%;
-    min-height: 250vh;
+    padding: 0 10% 5%;    
        
 `
 

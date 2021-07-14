@@ -53,8 +53,7 @@ import {
  
  const useStyles = makeStyles((theme) => ({
    root: {
-     maxWidth: '25rem',
-     maxHeight: '25rem',
+     maxWidth: '25rem',     
      flexGrow: 1,
      margin: '3rem auto 7rem',
    },

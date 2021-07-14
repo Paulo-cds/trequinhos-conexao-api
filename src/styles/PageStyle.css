@@ -3,7 +3,11 @@
 
 .text {
     text-align: center;
-    margin: -4rem 0 7rem;
+    margin: -5rem 0 7rem;
+    
+
+    background: rgb(30,5,70);
+    background: linear-gradient(180deg, rgba(30,5,70,1) 0%, rgba(140,46,121,1) 35%, rgba(223,228,230,1) 100%);
 
     @media(max-width: 500px){
         margin: -7rem 0 7rem;

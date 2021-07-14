@@ -20,6 +20,7 @@ const useStyles  = makeStyles((theme)  => ({
     },
     items: {
         alignContent: 'center',
+        justifyContent: 'center',
     }
 }))
 

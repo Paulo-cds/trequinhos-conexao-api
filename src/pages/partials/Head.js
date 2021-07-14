@@ -5,8 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
     head: {
-        background: 'rgb(30,5,70)',
-        background: 'linear-gradient(180deg, rgba(30,5,70,1) 0%, rgba(140,46,121,1) 35%, rgba(223,228,230,1) 100%)',
+        
         width: '100%',
         height: '50vh',
         display: 'block',

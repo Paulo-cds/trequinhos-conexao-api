@@ -18,9 +18,11 @@ const useStyles = makeStyles(() => ({
     }, */
     body: {        
         width: '100%',
+        
         //height: '50vh',
         //height: 'fit-content',
-    }
+    },
+    
 }))
 
 
@@ -28,11 +30,11 @@ const Default = ({children}) => {
     const classes = useStyles()
     return(
         <div className={classes.body}>
-            <Header/>
-            <Head/>
-            <Container className='container' maxWidth="xl">
+            <Header/>            
+                {/* <Head/> */}
+            <Container className='container' style={{padding: 0, minHeight: '100vh'}} maxWidth="false">
                 {children}
-            </Container>
+            </Container>            
             <Footer/>
         </div>
     )

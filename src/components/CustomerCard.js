@@ -34,10 +34,16 @@ const useStyles = makeStyles((theme) => ({
   editors:{
     display: editors
   },
+  maincard:{
+    marginLeft: 15,
+    marginRight: 15,
+  },
   root: {
     maxWidth: 345,
     margin: 15,
     textAlign: 'center',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     
   },
   media: {
@@ -108,8 +114,8 @@ const CustomerCard = ({
   const editing = prod === 'admin' ? true : false
 
   return (
-    <>
-      <Card className={classNames(className, classes.root)}>
+    <div className={classes.maincard}>
+      <Card className={classNames(className, classes.root)} style={{boxShadow: '0 0 5px grey'}}>
         <CardHeader
           
           title={name}
@@ -168,7 +174,7 @@ const CustomerCard = ({
       title="Deseja realmente excluir esse produto?"
       message="Ao confirmar não será possível reverter essa operação!"      
       />
-    </>
+    </div>
   );
 }
 

@@ -115,7 +115,7 @@ const Products = () => {
     return(
         <>              
             <div style={{display: loader}} >
-                <ReactLoading className={classes.loading} type={'bars'} color= {'black'} height= {200} width= {275}  /* style={{display: loader}} */ />
+                <ReactLoading className={classes.loading} type={'bars'} color= {'black'} height= {'15%'} width= {'40%'}  /* style={{display: loader}} */ />
             </div>
             
             <Grid container className={classes.items}>

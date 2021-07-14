@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     width: '80%',    
     
     textAlign: 'center',
-    margin: '3rem auto',    
+    margin: '3rem auto 0',    
     //marginTop: 150,
     //backgroundColor: theme.palette.background.paper,
   },

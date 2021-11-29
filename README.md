@@ -41,3 +41,9 @@ yarn start
 o projeto será executado no localhost:3000
 
 ```
+
+</br>
+<h2>Autor:</h2>
+<p>Paulo Ricardo Pereira Domingues</p>
+<p><a href="https://www.linkedin.com/in/paulorpd/" target="blanck">https://www.linkedin.com/in/paulorpd/</a></p>
+<p><a href="https://paulo-rpd.vercel.app/" target="blanck">https://paulo-rpd.vercel.app/</a></p>

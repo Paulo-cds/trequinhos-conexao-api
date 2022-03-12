@@ -17,9 +17,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ModalConfirm from './ModalConfirm'
 import clsx from 'clsx'
 import Edit from '../pages/Products/Edit'
-
-
 import prod from '../pages/Products/Products'
+import CarouselCard from './carousel';
 
 const token = localStorage.getItem('token')
 
@@ -49,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: '100%',
     paddingTop: '80%', // 16:9
+    cursor: 'pointer'
   },
     
   avatar: {
@@ -72,62 +72,61 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerCard = ({
-    id,
-    name,
-    category,
-    description,
-    urlImage,
-    className,
-    onRemoveProduct,
-    onEditProduct,
-    }) => {
-
-  
+  id,
+  name,
+  category,
+  description,
+  image,
+  className,
+  onRemoveProduct,
+  onEditProduct,
+  }) => {
+  const [displayCarousel, setDisplayCarousel] = useState(false)
+  const [imgCarousel, setImgCarousel] = useState([])
   const classes = useStyles();
   //const [expanded, setExpanded] = useState(false);
-
   const [openModal, setOpenModal] = useState(false)
-
   const [expanded, setExpanded] = useState(false);
-
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
   const handleToggleOpenModal = () => {
     setOpenModal(!openModal)
   } 
-
   const handleConfirmModal = id => {
-    onRemoveProduct(id)
+    onRemoveProduct(id, image)
     handleToggleOpenModal()
   }
-
   const handleRemoveProduct = () =>{
     handleToggleOpenModal()
   }
-
   const handleEditProduct = () =>{
-    onEditProduct(id, name, category, description, urlImage)
+    onEditProduct(id, name, category, description, image)
   }
-
   const editing = prod === 'admin' ? true : false
+
+  const handleDisplayCarousel = (image) => {    
+    setImgCarousel(image)
+    window.scroll(0,0)
+    setDisplayCarousel(true)    
+  }
+  
 
   return (
     <div className={classes.maincard}>
+      {
+        displayCarousel &&
+        <CarouselCard imgCarousel={imgCarousel} setDisplayCarousel={setDisplayCarousel} displayCarousel={displayCarousel} /> 
+      }
       <Card className={classNames(className, classes.root)} style={{boxShadow: '0 0 5px grey'}}>
-        <CardHeader
-          
-          title={name}
-          
+        <CardHeader          
+          title={name}          
         />
-        <CardMedia
-          
+        { image &&  <CardMedia          
           className={classes.media}
-          image={urlImage}
-          
-        />
-
+          image={image[0].url}
+          onClick={()=>{handleDisplayCarousel(image)}}
+        /> }
         <div className={classes.description}>
         <CardContent>
           <Typography className={classes.root}>
@@ -145,27 +144,19 @@ const CustomerCard = ({
           <ExpandMoreIcon />
         </IconButton>
         </div>
-
         <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography>{description}</Typography>        
         </CardContent>
       </Collapse>
-
-
-
-
-
         <CardActions className={classes.editors} disableSpacing>
           <IconButton aria-label="editar cadastro" onClick={handleEditProduct}  >
             <EditIcon />
           </IconButton>
           <IconButton aria-label="deletar cadastro" onClick={handleRemoveProduct}>
             <DeleteIcon />
-          </IconButton>
-          
-        </CardActions>
-        
+          </IconButton>          
+        </CardActions>        
       </Card>
       <ModalConfirm 
       open={openModal}

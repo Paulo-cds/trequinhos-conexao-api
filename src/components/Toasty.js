@@ -1,21 +1,14 @@
-import useState from 'react';
-import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-
 import MuiAlert from '@material-ui/lab/Alert'
 
-const Toasty = ({open, severity, onClose, text}) => {
+const Toasty = ({open, severity, onClose, text, handle}) => {
   
-
-
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     onClose();
+    handle()
   };
 
   return (
@@ -30,8 +23,7 @@ const Toasty = ({open, severity, onClose, text}) => {
         >            
              <MuiAlert elevation={6} variant="filled" severity={severity}>
                  {text}
-            </MuiAlert>
-                  
+            </MuiAlert>                  
       </Snackbar>
     
   );

@@ -1,27 +1,22 @@
 import {useState, useEffect} from 'react'
-import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
 import CustomerCard from '../../components/CustomerCard'
 import { makeStyles } from '@material-ui/core/styles'
-
 import ReactLoading from 'react-loading'
-//import {Name, Password} from '../Admin'
-
+import {db} from '../../firebase'
 import Edit from './Edit'
 import {
     useHistory,
     useParams,
   } from 'react-router-dom'
-
-  /* let loader = 'block'
-
-  const handleLoading= () => {
-    loader = 'none';
-    console.log(`loader aqui = ${loader}`)
-  }; */
-  
-
-
+import {
+  getStorage,
+  ref,
+  listAll,
+  getDownloadURL, 
+  deleteObject,   
+  uploadBytesResumable
+  } from 'firebase/storage'
 
 
 const useStyles  = makeStyles((theme)  => ({
@@ -44,54 +39,84 @@ const useStyles  = makeStyles((theme)  => ({
 const Products = () => {
     const {prod} = useParams()
     const classes = useStyles()
-
     const [products, setProducts] = useState([])
     const [loader, setLoader] = useState('block')
+    const [produtos, setProdutos] = useState([])
+    const [prodId, setProdId] = useState([])
+    const [images, setImages] = useState([])
+    const [searchTipo, setSearchTipo] = useState()
+    const [searchCategoria, setSearchCategoria] = useState()
+    const [refresh, setRefresh] = useState(false)
     
     
-    
-    //Tentar colocar /antes do caminho pra selecionar o tipo de produto que quer
-    //função que faz o get dos produtos
-    useEffect(() => {
-        axios.get ('https://banco-trequinhos.herokuapp.com/api/products')/* ('http://localhost:8080/api/products') */
-        .then(response => {
-            const data = response.data
-            if(prod==='all' || prod ==='admin'){
-                setProducts(data)
-                setLoader('none')
-                console.log(`loading ${loader}`)
-            } else {
-                
-                const dados = data.filter(datas=>datas.category===prod)
-                
-                setProducts(dados)
-                setLoader('none')
-                console.log(`loading ${loader}`)
-            }
+    useEffect(() => {                                 
+      fetchProdutos()
+      listItem()
+    }, [refresh])
+
+
+    /******Função que faz o Get dos produtos******/ 
+    async function fetchProdutos() {                 
+      let ref = db.collection(`produtoss`).where('categoria', '==', prod)
+      ref.get()        
+        .then((snapshot) => {             
+          snapshot.forEach((doc) => {                         
+            setProducts(prevState => [...prevState, doc.data()])   
+            setProdId(prevState => [...prevState, doc.id]) 
+            setLoader('none')   
+          })                    
+        })        
+    }
+
+    /******Função que faz o Get das imagens******/
+    function listItem() {
+      setImages([])
+      const listRefix = ''
+      const storage = getStorage()
+      const listRef = ref(storage, `produtos/${prod}`)
+      listAll(listRef)
+        .then(res => {                                
+          res.prefixes.map((prefix)=>{                  
+            const listRefix = ref(storage, prefix._location.path)
+            listAll(listRefix)
+              .then(res => {                
+                res.items.forEach((item) => {                                                            
+                  getDownloadURL(item)
+                    .then((url) => {                      
+                      setImages(prevState => [...prevState, { name: item.parent.name, url: url, referencia: item }])                                                 
+                    })                    
+                })
+              })              
+          })                                
         })
-
-        
-
-    }, [])
-
-    
-    //Função que remove os produtos
-
-    
-    const handleRemoveProduct = id => {
-        axios.delete (`https://banco-trequinhos.herokuapp.com/api/products/${id}`)   /* (`http://localhost:8080/api/products/${id}`) */
-         .then(response => {
-             
-            axios.get ('https://banco-trequinhos.herokuapp.com/api/products')/* ('http://localhost:8080/api/products') */
-             .then(response => {
-            const data = response.data
-
-
-            setProducts(data)
-            
+        .then(console.log('images ', images))                 
+        .catch(err => {
+          alert(err.message);
         })
-        
-         })
+    }
+
+    
+    //Função que remove os produtos    
+    const handleRemoveProduct = (id, image) => {  
+        db.collection(`produtoss`).doc(id).delete()
+        .then(() => {
+          alert("Excluido com sucesso")          
+        })
+        .catch((err) => {console.log(err)})
+    
+    
+        /*****Delete storage*****/
+        const storage = getStorage()      
+        image.map((file)=>{
+          const desertRef = ref(storage, file.referencia.fullPath);      
+          deleteObject(desertRef)
+          .then(() => {   
+            //setEditCard(false)     
+            setRefresh(!refresh)             
+          }).catch((error) => {
+            console.log(error)
+          });
+        })        
     }
 
 
@@ -103,15 +128,22 @@ const Products = () => {
       }
 
 
-    const handleEditProduct = (id) => {
-        
-
-        handleMenuClick(`edit/${id}`)
-       
+    const handleEditProduct = (id) => {        
+      handleMenuClick(`edit/${id}`)       
     }
-   
-   //console.log(`usuario esta - ${Name} - password ${Password}`)
-   console.log(`loader aqui = ${loader}`)
+
+    const filterImages = (prod) => {         
+      let filter = []
+      filter = (images.filter(image=> image.name === prod.nome))    
+      if(filter.length > 0){
+        //console.log('filter ', filter)
+        return(       
+          filter                             
+        )    
+      }
+    }
+    
+
     return(
         <>              
             <div style={{display: loader}} >
@@ -120,14 +152,14 @@ const Products = () => {
             
             <Grid container className={classes.items}>
             {
-                products.map(item => (
+                products.map((item, index) => (
                     <Grid item xs={12} md={4} xl={2}>
                         <CustomerCard 
-                        id = {item._id}
-                        name={item.name}
+                        id = {prodId[index]}
+                        name={item.nome}
                         category={item.category}
-                        description={item.description}
-                        urlImage={item.urlImage}        
+                        description={item.descricao}
+                        image={filterImages(item)}        
                         className= {classes.card}   
                         onRemoveProduct={handleRemoveProduct} 
                         onEditProduct={handleEditProduct}            

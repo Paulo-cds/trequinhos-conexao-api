@@ -1,0 +1,39 @@
+.containerCarousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.336);
+  backdrop-filter: blur(5px);
+  z-index: 99;
+
+  .carousel {
+    width: 60%;
+    align-items: center;
+    text-align: center;
+
+    .contentCarousel {
+      position: relative;
+
+      .icon {
+        cursor: pointer;
+        position: absolute;
+        top: 3%;
+        right: 8%;
+        background-color: whitesmoke;
+        z-index: 150;
+        border-radius: 100%;
+      }
+
+      img {
+        width: 90%;
+        margin: 0 auto;
+      }
+    }
+  }
+}

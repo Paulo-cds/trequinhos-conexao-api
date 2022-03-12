@@ -247,24 +247,23 @@ const Header = () => {
                 }}*/
               >
                 <List component="div" disablePadding>                
-                  <ListItem button onClick={()=>handleClose('Corpo')} >
+                  <ListItem button onClick={()=>handleClose('corpo')} >
                     <ListItemText>Para o Corpo </ListItemText>                   
                   </ListItem>
+                  <ListItem button onClick={()=>handleClose('rosto')} >
+                    <ListItemText>Para o Rosto </ListItemText>                   
+                  </ListItem>
 
-                  <ListItem button onClick={()=>handleClose('Casa')}>
+                  <ListItem button onClick={()=>handleClose('casa')}>
                   <ListItemText>Para a Casa</ListItemText>
                   </ListItem>
 
-                  <ListItem button onClick={()=>handleClose('Masculino')}>
+                  <ListItem button onClick={()=>handleClose('masculino')}>
                     <ListItemText>Masculino</ListItemText>
                   </ListItem>
 
-                  <ListItem button onClick={()=>handleClose('Resina')}>
+                  <ListItem button onClick={()=>handleClose('resina')}>
                     <ListItemText>Resina</ListItemText>
-                  </ListItem>
-
-                  <ListItem button onClick={()=>handleClose('all')}>
-                    <ListItemText>Todos os produtos</ListItemText>
                   </ListItem>
                 </List>
               </Collapse>

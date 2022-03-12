@@ -1,5 +1,4 @@
 import {useState, useRef, useEffect} from 'react'
-import axios from 'axios'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -8,9 +7,19 @@ import { useParams, useHistory} from 'react-router-dom'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import InputLabel from '@material-ui/core/InputLabel'
-
 import Toasty from '../../components/Toasty'
-
+import {db} from '../../firebase'
+import './styleEdit.scss'
+import { useDropzone } from 'react-dropzone'
+import { BiTrash } from "react-icons/bi"
+import {
+    getStorage,
+    ref,
+    listAll,
+    getDownloadURL,
+    deleteObject,
+    uploadBytesResumable
+  } from 'firebase/storage'
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {     
@@ -27,9 +36,12 @@ const useStyles = makeStyles((theme) => ({
 const Edit = () => {
     const {id} = useParams()
     const history = useHistory()        
-
     const [cat, setCat] = useState('')
     const classes = useStyles()
+    const [imageUpload, setImageUpload] = useState([]) 
+    const [imageDefault, setImageDefault] = useState([])    
+    const [nameProduct, setNameProduct] = useState()
+    const [categoryProduct, setCategoryProduct] = useState()
 
     const [form, setForm] = useState({
         name:{
@@ -50,125 +62,186 @@ const Edit = () => {
         },
     })
 
-    useEffect(() => {
-        axios.get  (`https://banco-trequinhos.herokuapp.com/api/products/${id}`) /* (`http://localhost:8080/api/products/${id}`) */
-        .then(response => {
-            const data = response.data[0]
-            console.log(`Name da api = ${data.name} do id = ${id}`)
-            setForm({
-                name: {value: data.name},
-                category: {value: data.category},
-                description: {value: data.description},
-                urlImage: {value: data.urlImage},                
-            })
-            
-        })
-    }, [])
-
-    console.log(form.name.value)       
-
-
-
-    const [openToasty, setOpenToasty] = useState(false)
-
-    
-
+    useEffect(() => {        
+        /******Função que faz o Get dos produtos******/                         
+        let ref = db.collection(`produtoss`).doc(id)
+        ref.get()                    
+            .then((doc) => {          
+                let newProducts = doc.data()                          
+                setForm({
+                  name: newProducts.nome,
+                  description: newProducts.descricao,
+                  category: newProducts.categoria      
+                })
+                setNameProduct(newProducts.nome)
+                setCategoryProduct(newProducts.categoria)
+                listItem(newProducts.nome, newProducts.categoria)               
+              })         
+    }, [])          
+    const [openToasty, setOpenToasty] = useState(false)    
     const [progressLoading, setprogressLoading] = useState(false)    
     const timer = useRef()
-
-
     const handleInputChange = (e) => {
         const {name, value} = e.target
-
         setForm({
             ...form,
-            [name]: {
-                value,
-            },
+            [name]: 
+                value,            
         })
     }
-
-    const handleChange = (event) => {
-        setCat(event.target.value);
-      };
-
+    
     const handleRegisterButton = () => {
-
-
         if (!progressLoading) {            
             setprogressLoading(true);
             timer.current = window.setTimeout(() => {                
-              setprogressLoading(false)
-
-        
-
+              setprogressLoading(false)    
                 let hasError = false
-
                 let newFormState = {
                     ...form,
-                }
-
-                
-                if(!form.name.value){
+                }                
+                if(!form.name){
                     hasError = true
-
-                    newFormState.name = {
-                        value: form.name.value,
+                    newFormState.name = {                        
                         error: true,
                         helperText: 'Digite o nome corretamente'
                     }
                 }
-
-                if(!cat){
+                if(!form.category){
                     hasError = true
-
-                    newFormState.category = {
-                        value: form.category.value,
+                    newFormState.category = {                      
                         error: true,
                         helperText: 'Digite a categoria corretamente'
                     }
                 }
-
-                if(!form.description.value){
+                if(!form.description){
                     hasError = true
-
-                    newFormState.description = {
-                        value: form.description.value,
+                    newFormState.description = {                        
                         error: true,
                         helperText: 'Digite a descrição corretamente'
                     }
-                }
-
-                if(!form.urlImage.value){
-                    hasError = true
-
-                    newFormState.urlImage = {
-                        value: form.urlImage.value,
-                        error: true,
-                        helperText: 'Digite a url corretamente'
-                    }
-                }
-
+                }               
                 if(hasError) {
                     setForm(newFormState)
-                } else{
-                        
-                    axios.put (`https://banco-trequinhos.herokuapp.com/api/products/${id}`,  /* (`http://localhost:8080/api/products/${id}`, */ 
-                    {            
-                        name: form.name.value,
-                        category: cat,
-                        description: form.description.value,
-                        urlImage: form.urlImage.value,
-                    }).then((response) => {
-                        setOpenToasty(true)
-                        
-                    })
-                    }
-                    
+                } else{                                            
+                    handleEdit()
+                }                    
             }, 3000)                
         }  
                      
     }
+
+     /****função de edição das imagens******/
+     const handleEdit = () => {        
+        const storage = getStorage();
+        addProp()        
+        const formData = new FormData()
+        if(imageUpload. length > 0){
+          imageUpload.forEach(file =>{
+            const storageRef = ref(storage, `produtos/${categoryProduct}/${nameProduct}/` + file.name); 
+            const uploadTask = uploadBytesResumable(storageRef, file);              
+            uploadTask.on('state_changed',
+              (snapshot) => {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;                
+                switch (snapshot.state) {
+                  case 'paused':
+                    console.log('Upload is paused');
+                    break;
+                  case 'running':
+                    console.log('Upload is running');
+                    break;
+                }
+              },
+              (error) => {                
+                switch (error.code) {
+                  case 'storage/unauthorized':                   
+                    break;
+                  case 'storage/canceled':                    
+                    break;  
+                  case 'storage/unknown':                    
+                    break;
+                }
+              },
+              () => {                
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {                
+                })                
+              }
+            )
+          })
+        }   
+      }  
+  
+      /******Função que edita no firestore******/
+      const addProp = async () => {                      
+        await db.collection(`produtoss`).doc(id).update(      
+          {
+            nome: form.name,
+            descricao: form.description,
+            categoria: form.category
+          }
+        ).then(() => {
+            setOpenToasty(true)     
+        })
+        .catch((err) => {console.log(err)})
+      } 
+
+      /*****upload imagem*******/
+    const { getRootProps, getInputProps } = useDropzone({
+        accepted: 'images/*',
+        onDrop: (acceptedFile) => {
+        const newFiles = acceptedFile.map(file => {        
+            return Object.assign(file, {
+            preview: URL.createObjectURL(file)
+            })        
+        })
+        setImageUpload([
+            ...imageUpload,
+            ...newFiles,               
+        ])
+        }
+    })
+
+    const handleRemoveFile = fileName => {
+        const newFileState = imageUpload.filter(file => file.name !== fileName)
+        setImageUpload(newFileState)
+      }
+    
+      const handleDelete = (image) => {
+        const storage = getStorage()
+    
+        // Create a reference to the file to delete
+        const desertRef = ref(storage, `${image}`);
+    
+        // Delete the file
+        deleteObject(desertRef).then(() => {       
+          listItem()    
+        }).catch((error) => {
+          console.log(error)
+        });
+      }
+    
+      const listItem = (name, category) => {
+        console.log('name ', nameProduct)
+        setImageDefault([])    
+        const storage = getStorage()
+        const listRef = ref(storage, nameProduct ? 
+          `produtos/${categoryProduct}/${nameProduct}` : 
+          `produtos/${category}/${name}`)
+    
+        listAll(listRef)
+          .then(res => {
+            res.items.forEach((item) => {
+              getDownloadURL(item)
+                .then((url) => {
+                  setImageDefault(prevState => [...prevState, { url: url, referencia: item }])
+                })
+            })
+          })
+          .then('default ',imageDefault)
+          .catch(err => {
+            alert(err.message);
+          })
+      }
 
          
 
@@ -176,13 +249,15 @@ const Edit = () => {
         <>
             <div className={classes.wrapper}>
                 <TextField 
-                error={form.name.error} 
-                helperText={form.name.error ? form.name.helperText : ''} 
-                id="standard-basic" 
-                label="Nome" 
-                name='name' 
-                value={form.name.value} 
-                onChange={handleInputChange}/>     
+                    error={form.name.error} 
+                    helperText={form.name.error ? form.name.helperText : ''} 
+                    id="standard-basic" 
+                    label="Nome"
+                    name='name' 
+                    value={form.name.value} 
+                    defaultValue={form.name.value}
+                    onChange={()=>{alert('Não é possível alterar o nome!')}}
+                />     
             </div>
 
             <div className={classes.wrapper}>
@@ -191,18 +266,17 @@ const Edit = () => {
                 className={classes.selec}
                 labelId="demo-simple-select-label"                
                 value={cat}
-                onChange={handleChange}
-
-                error={form.category.error} 
-                //helperText={form.category.error ? form.category.helperText : ''} 
+                onChange={handleInputChange}
+                error={form.category.error}                 
                 id="standard-basic" 
-                label="Categoria" 
+                label="Categoria"
                 name='category'
             >
-                <MenuItem value={'Corpo'}>Corpo</MenuItem>
-                <MenuItem value={'Casa'}>Casa</MenuItem>
-                <MenuItem value={'Masculino'}>Masculino</MenuItem>
-                <MenuItem value={'Resina'}>Resina</MenuItem>
+                <MenuItem value={'corpo'}>Corpo</MenuItem>
+                <MenuItem value={'rosto'}>Rosto</MenuItem>
+                <MenuItem value={'casa'}>Casa</MenuItem>
+                <MenuItem value={'masculino'}>Masculino</MenuItem>
+                <MenuItem value={'resina'}>Resina</MenuItem>
             </Select> 
             </div>
 
@@ -211,23 +285,49 @@ const Edit = () => {
                 error={form.description.error} 
                 helperText={form.description.error ? form.description.helperText : ''} 
                 id="standard-basic" 
-                label="Descrição" 
+                label="Descrição"
                 name='description' 
+                defaultValue={form.description.value}
                 value={form.description.value} 
                 onChange={handleInputChange}
                 />     
-            </div>
+            </div>            
 
-            <div className={classes.wrapper}>
-                <TextField 
-                error={form.urlImage.error} 
-                helperText={form.urlImage.error ? form.urlImage.helperText : ''} 
-                id="standard-basic" 
-                label="Url da imagem" 
-                name='urlImage' 
-                value={form.urlImage.value} 
-                onChange={handleInputChange}
-                />     
+            <div className='thumbsContainer'>
+                <div className='dropzone' {...getRootProps()}>
+                <input {...getInputProps()} />
+                <p>
+                    Para adicionar novas imagens clique aqui ou arraste a imagem.
+                </p>
+                </div>
+                {
+                    imageUpload.length === 0 && imageDefault &&
+                    imageDefault.map(file => (
+                        <div
+                        key={file.name}
+                        className='thumb'
+                        style={{ backgroundImage: `url(${file.url})` }}
+                        >
+                        <div className='mask' >
+                            <BiTrash className='maskTrash' color='white' size='2em' onClick={() => handleDelete(file.referencia)} />
+                        </div>
+                        </div>
+                    ))
+                }
+                {
+                    imageUpload &&
+                    imageUpload.map(file => (
+                        <div
+                        key={file.name}
+                        className='thumb'
+                        style={{ backgroundImage: `url(${file.preview})` }}
+                        >
+                        <div className='mask' >
+                            <BiTrash className='maskTrash' color='white' size='2em' onClick={() => handleRemoveFile(file.name)} />
+                        </div>
+                        </div>
+                    ))
+                }
             </div>
 
             <div className={classes.wrapper}>
@@ -248,7 +348,8 @@ const Edit = () => {
             open={openToasty} 
             severity='success' 
             text='Produto alterado com sucesso!' 
-            onClose={() => setOpenToasty(false)}            
+            onClose={() => setOpenToasty(false)}  
+            handle={()=>window.history.back()}          
             />
         
         </>

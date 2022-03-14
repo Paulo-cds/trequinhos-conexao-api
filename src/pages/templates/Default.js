@@ -30,8 +30,7 @@ const Default = ({children}) => {
     const classes = useStyles()
     return(
         <div className={classes.body}>
-            <Header/>            
-                {/* <Head/> */}
+            <Header/>                            
             <Container className='container' style={{padding: 0, minHeight: '100vh'}} maxWidth="false">
                 {children}
             </Container>            

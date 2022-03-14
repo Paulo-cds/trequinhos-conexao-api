@@ -1,7 +1,4 @@
-import {useState,
-  useRef,
-  useEffect,
-} from 'react'
+import {useEffect, useState} from 'react'
 
 import {
     AppBar,
@@ -15,34 +12,19 @@ import {
     ListItemIcon,
     ListItemText,    
 } from '@material-ui/core'
-
-import {
-  useHistory,
-} from 'react-router-dom'
-
-
+import {useHistory} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
-import SearchIcon from '@material-ui/icons/Search'
 import HomeIcon from '@material-ui/icons/Home'
 import StoreIcon from '@material-ui/icons/Store'
 import InfoIcon from '@material-ui/icons/Info'
-import FacebookIcon from '@material-ui/icons/Facebook'
-import InstagramIcon from '@material-ui/icons/Instagram'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import Popper from '@material-ui/core/Popper'
-import Grow from '@material-ui/core/Grow'
-import Paper from '@material-ui/core/Paper'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
 import { useLocation } from 'react-router-dom'
 import Collapse from '@material-ui/core/Collapse'
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import ExpandLess from '@material-ui/icons/ExpandLess'
 import Insta from '../../images/instagram.png'
 import Face from '../../images/facebook.png'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {db} from '../../firebase'
 
 
 const drawerWidth = 200
@@ -90,20 +72,14 @@ const useStyles = makeStyles(() => ({
       display: 'flex',
       alignItems: 'center',
       padding: (0, 1),
-      // necessary for content to be below app bar
-      
       justifyContent: 'flex-end',
       width: 'fit-content',
     },
     drawer: {
       width: drawerWidth,
       height: 'fit-content',
-      //flexShrink: 0,
-      //marginLeft:50,
       position: 'relative',
-      left: 30,
-      //marginTop: 30,
-      //display: 'none',      
+      left: 30,    
     },
     root: {
       flexGrow: 1,      
@@ -115,17 +91,24 @@ const useStyles = makeStyles(() => ({
 
 
 
-
-
-
 const Header = () => {
     const classes = useStyles()
     const history = useHistory()
     const location = useLocation()
-
     const [menuOpen, setMenuOpen] = useState(false)
-    const [subMenuOpen, setSubMenuOpen] = useState(false)
-    //classes.drawer = subMenuOpen
+    const [subMenuOpen, setSubMenuOpen] = useState(false)  
+    const [categorys, setCategorys] = useState([])
+    
+    useEffect(() => {                 
+      let ref = db.collection(`categorias`)
+      ref.get()        
+        .then((snapshot) => {             
+          snapshot.forEach((doc) => {                         
+            setCategorys(prevState => [...prevState, doc.data()])                         
+          })                    
+        })                
+    },[])
+
     const handleToggleMenu = () => {
       setMenuOpen(!menuOpen)
       if (subMenuOpen){
@@ -144,20 +127,13 @@ const Header = () => {
            
     }
     
-
-    const handleToggleSubMenu = (event) => {
-      setSubMenuOpen(!subMenuOpen )
-      //document.querySelector(classes.drawer).style.display ='block'
-    }
-   
-
     const handleClose = (pgr) => {     
       
       if(location.pathname.match('/products')){
-        handleMenuClick(`${pgr}`)
+        handleMenuClick(`${pgr.toLowerCase()}`)
         window.location.reload()
       } else {
-        handleMenuClick(`/products/${pgr}`)
+        handleMenuClick(`/products/${pgr.toLowerCase()}`)
       }
            
       
@@ -176,17 +152,14 @@ const Header = () => {
 
     return(
       <>
-
         <div className={classes.root}>
           <AppBar position="static">
             <Toolbar>
               <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => handleToggleMenu()}>
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" className={classes.title}>
-                
-              </Typography>
-               {/* <div className = {classes.divisao}>                */}
+              <Typography variant="h6" className={classes.title}>                
+              </Typography>               
                 <a className = {classes.face} href="https://www.facebook.com/trequinhosecoisaetal" target="_blank">
                   <img src={Face} alt={'Facebook'}  className = {classes.social}/>
                 </a>
@@ -196,12 +169,7 @@ const Header = () => {
               {/* </div>  */}
             </Toolbar>
           </AppBar>
-        </div>
-
-
-
-
-        
+        </div>        
         <Drawer open={menuOpen} onClose={() => handleToggleMenu()}>
           <List>
             <ListItem button onClick={() => handleMenuClick('/')}>
@@ -210,79 +178,65 @@ const Header = () => {
               </ListItemIcon>
               <ListItemText>Home</ListItemText>
             </ListItem>
-
             <ListItem button onClick={() => handleMenuClick('/about')}>
               <ListItemIcon>
                 <InfoIcon />
               </ListItemIcon>
               <ListItemText>Sobre</ListItemText>
             </ListItem>
-
             <ListItem button 
-            onClick={() => handleSubMenu()} 
-            //aria-controls="simple-menu" 
-            //aria-haspopup="true"   
-            //{() => handleMenuClick('/products')}
+            onClick={() => handleSubMenu()}             
             >
               <ListItemIcon>
                 <StoreIcon />
               </ListItemIcon>
-              <ListItemText >Lista de Produtos</ListItemText>
-              
+              <ListItemText >Lista de Produtos</ListItemText>              
             </ListItem>
-              <Collapse
-                //id="simple-menu"
-                //anchorEl={anchorEl}
+              <Collapse                
                 keepMounted
-                in={subMenuOpen}
-                //open={Boolean(anchorEl)}
-                //open={subMenuOpen}
-                //onClose = {() => handleToggleSubMenu()} 
-                //onClick={() => handleToggleSubMenu()}
-                className={classes.drawer}
-                //variant="persistent"
-                //anchor="left"                
-                /*classes={{
-                  paper: classes.drawerPaper,
-                }}*/
+                in={subMenuOpen}                
+                className={classes.drawer}                
               >
-                <List component="div" disablePadding>                
-                  <ListItem button onClick={()=>handleClose('corpo')} >
+                <List component="div" disablePadding>                   
+                  {
+                    categorys.length > 0 && 
+                    categorys.map((category, index) => (
+                      <>
+                      <ListItem key={index} button onClick={()=>handleClose(`${category.categoria}`)} >
+                        <ListItemText>{category.categoria.charAt(0).toUpperCase() + category.categoria.slice(1)} </ListItemText>                   
+                      </ListItem>
+                      </>
+                    ))
+                  }                                
+                  {/* <ListItem button onClick={()=>handleClose('corpo')} >
                     <ListItemText>Para o Corpo </ListItemText>                   
                   </ListItem>
                   <ListItem button onClick={()=>handleClose('rosto')} >
                     <ListItemText>Para o Rosto </ListItemText>                   
                   </ListItem>
-
                   <ListItem button onClick={()=>handleClose('casa')}>
                   <ListItemText>Para a Casa</ListItemText>
                   </ListItem>
-
                   <ListItem button onClick={()=>handleClose('masculino')}>
                     <ListItemText>Masculino</ListItemText>
                   </ListItem>
-
                   <ListItem button onClick={()=>handleClose('resina')}>
                     <ListItemText>Resina</ListItemText>
-                  </ListItem>
+                  </ListItem> */}
                 </List>
-              </Collapse>
-            
-            
+              </Collapse>                        
             <ListItem className={classes.cad} button onClick={() => handleClose('add')}>
               <ListItemIcon>
                 <AddCircleOutlineIcon />
               </ListItemIcon>
               <ListItemText >Cadastro de Produtos</ListItemText>              
             </ListItem>
-
             <ListItem className={classes.cad} button onClick={() => handleExit()}>
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>
               <ListItemText >Sair</ListItemText>              
-            </ListItem>
-            
+            </ListItem>            
           </List>  
         </Drawer>
       </>

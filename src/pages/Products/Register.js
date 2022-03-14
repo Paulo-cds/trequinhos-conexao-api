@@ -1,4 +1,4 @@
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import axios from 'axios'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -22,6 +22,37 @@ import {
 
 
 const useStyles = makeStyles((theme) => ({
+    addCat:{
+        position: 'absolute',
+        zIndex: 99,
+        top: 0,
+        left:0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        width: '100%',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    close:{
+        position:'relative',
+        top:'5px',
+        width: 20,
+        height: 20,
+        textAlign: 'center',
+        right:'-70px',
+        backgroundColor:'white',
+        cursor: 'pointer',
+        borderRadius: '100%',
+        padding: 2
+    },
+    formAdd:{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     wrapper: {     
         margin: theme.spacing(3),      
     },
@@ -40,6 +71,21 @@ const Register = () => {
     const classes = useStyles()
     const [imageUpload, setImageUpload] = useState([])
     const [uploadProgress, setUploadProgress] = useState()
+    const [categorys, setCategorys] = useState([])
+    const [addCat, setAddCat] = useState(false)
+    const [newCategory, setNewCategory] = useState()
+
+    useEffect(() => {                 
+        let ref = db.collection(`categorias`)
+        ref.get()        
+          .then((snapshot) => {             
+            snapshot.forEach((doc) => {                         
+              setCategorys(prevState => [...prevState, doc.data()])   
+              console.log(doc.data())              
+            })                    
+          }) 
+          .then(console.log(categorys))               
+    },[])
 
     const [form, setForm] = useState({
         name:{
@@ -183,6 +229,18 @@ const Register = () => {
 
     }
 
+    /***adiciona categoria******/
+    const addCategory = (e) => {
+        e.preventDefault()
+        db.collection(`categorias`).add(
+                {categoria:newCategory.toLowerCase()}
+            ).then(() => {
+                alert("Adicionado com sucesso")
+                window.location.reload()
+            })
+            .catch((err) => {console.log(err)})  
+    }
+
     /****upload imagem******/
 
   const handleRemoveFile = fileName => {
@@ -206,11 +264,26 @@ const Register = () => {
     }
   })
 
+  const handleAdd = () => {
+    window.scroll(0,0)
+    setAddCat(true)
+  }
+
     return(
         <>
         <div className={classes.wrapper}>
             <TextField error={form.name.error} helperText={form.name.error ? form.name.helperText : ''} id="standard-basic" label="Nome" name='name' value={form.name.value} onChange={handleInputChange}/>     
         </div>
+        {
+            addCat &&
+            <div className={classes.addCat}>
+                <p className={classes.close} onClick={()=>setAddCat(false)}>X</p>
+              <form className={classes.formAdd} onSubmit={(e)=>addCategory(e)}>
+                <input onChange={(e)=>setNewCategory(e.target.value)}  />
+                <button style={{marginTop:15, cursor:'pointer'}} type='submit'>Adicionar</button>
+              </form>
+            </div>
+        }
         <div className={classes.wrapper}>            
             <InputLabel> Categoria </InputLabel>
             <Select
@@ -226,11 +299,18 @@ const Register = () => {
                 label="Categoria" 
                 name='category'
             >
-                <MenuItem value={'corpo'}>Corpo</MenuItem>
+                {
+                    categorys.length > 0 &&
+                    categorys.map((category, index) => (
+                        <MenuItem key={index} value={category.categoria}>{category.categoria}</MenuItem>
+                    ))
+                }
+                <MenuItem onClick={()=>handleAdd()}>Adicionar categoria</MenuItem>
+                {/* <MenuItem value={'corpo'}>Corpo</MenuItem>
                 <MenuItem value={'rosto'}>Rosto</MenuItem>
                 <MenuItem value={'casa'}>Casa</MenuItem>
                 <MenuItem value={'masculino'}>Masculino</MenuItem>
-                <MenuItem value={'resina'}>Resina</MenuItem>
+                <MenuItem value={'resina'}>Resina</MenuItem> */}
             </Select>
         </div>
         <div className={classes.wrapper}>

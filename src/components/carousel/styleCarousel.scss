@@ -17,6 +17,10 @@
     align-items: center;
     text-align: center;
 
+    @media (max-width: 780px) {
+      width: 80%;
+    }
+
     .contentCarousel {
       position: relative;
 

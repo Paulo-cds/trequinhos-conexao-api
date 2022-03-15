@@ -1,19 +1,9 @@
-import {useState, useContext} from 'react';
+import {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
-import { useHistory } from 'react-router';
-//import HandleButton from './partials/Login'
-import StoreContext from '../components/store/Context';
 import {RubberBand} from 'animate-css-styled-components'
-
-import VisibilityOff from '@material-ui/icons/VisibilityOff'
-import Visibility from '@material-ui/icons/Visibility'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import IconButton from '@material-ui/core/IconButton'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
-import Input from '@material-ui/core/Input'
-
+import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from 'firebase/auth'
 
 
 const token = localStorage.getItem('token')
@@ -39,9 +29,9 @@ const useStyles = makeStyles((theme) => ({
     root: {
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
-        width: '25ch',
+        width: '25ch',        
       },
-      margin: '0 auto',
+      marginLeft: 30,
       display: editors,
     },
   }));
@@ -53,16 +43,10 @@ const useStyles = makeStyles((theme) => ({
   
       
 
-function Admin(){
-    const history = useHistory()
-    const [values, setValues] = useState(initialState)
-    const [error, setError] = useState(null)
-    const { setToken } = useContext(StoreContext)
-    //const [user, setUser] = useState('')
-    //const [password, setPassword] = useState('')
-    const classes = useStyles()
-    const [admin, setAdmin] = useState(false)
-
+function Admin(){    
+    const [values, setValues] = useState(initialState)    
+    const classes = useStyles()    
+    let auth = getAuth()
     
 
     
@@ -98,14 +82,20 @@ function Admin(){
 
         if(user === process.env.REACT_APP_ADMINIST && password === process.env.REACT_APP_SENHA){
           localStorage.setItem('token', admin)
-          window.location.reload()          
-          return
-        } /* Next tbm tem iisso
-        NEXT_PUBLIC_VARIAVEL */
 
+          signInWithEmailAndPassword(auth, process.env.REACT_APP_EMAIL, process.env.REACT_APP_SENHA)
+            .then((userCredential) => {
+              console.log('LOGADO!', userCredential)
+              window.location.reload()  
+            })
+            .catch(error => {
+              console.log(error)
+            })
+                  
+          return
+        } 
         alert('Usuário e/ou senha incorreto(s)')
-        setValues(initialState)
-        
+        setValues(initialState)        
     }
 
     const handleClickShowPassword = () => {

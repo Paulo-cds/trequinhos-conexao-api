@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-
+import { getAuth, signOut } from "firebase/auth"
 import {
     AppBar,
     Toolbar,
@@ -98,6 +98,14 @@ const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false)
     const [subMenuOpen, setSubMenuOpen] = useState(false)  
     const [categorys, setCategorys] = useState([])
+    const auth = getAuth()
+    
+
+    auth.onAuthStateChanged(user => {
+      if(user){
+        
+      } 
+    })
     
     useEffect(() => {                 
       let ref = db.collection(`categorias`)
@@ -142,7 +150,11 @@ const Header = () => {
     const handleExit = () => {
       const admin = false
       localStorage.setItem('token', admin)
-      window.location.reload()
+      signOut(auth).then(() => {               
+        window.location.reload()
+      }).catch((error) => {
+        // An error happened.
+      })      
       handleToggleMenu()
          
     }
@@ -207,22 +219,7 @@ const Header = () => {
                       </ListItem>
                       </>
                     ))
-                  }                                
-                  {/* <ListItem button onClick={()=>handleClose('corpo')} >
-                    <ListItemText>Para o Corpo </ListItemText>                   
-                  </ListItem>
-                  <ListItem button onClick={()=>handleClose('rosto')} >
-                    <ListItemText>Para o Rosto </ListItemText>                   
-                  </ListItem>
-                  <ListItem button onClick={()=>handleClose('casa')}>
-                  <ListItemText>Para a Casa</ListItemText>
-                  </ListItem>
-                  <ListItem button onClick={()=>handleClose('masculino')}>
-                    <ListItemText>Masculino</ListItemText>
-                  </ListItem>
-                  <ListItem button onClick={()=>handleClose('resina')}>
-                    <ListItemText>Resina</ListItemText>
-                  </ListItem> */}
+                  }                                                  
                 </List>
               </Collapse>                        
             <ListItem className={classes.cad} button onClick={() => handleClose('add')}>

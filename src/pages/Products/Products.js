@@ -17,6 +17,7 @@ import {
   deleteObject,   
   uploadBytesResumable
   } from 'firebase/storage'
+  import opss from '../../images/ooops.jpg'
 
 
 const useStyles  = makeStyles((theme)  => ({
@@ -33,6 +34,31 @@ const useStyles  = makeStyles((theme)  => ({
     loading: {
         margin: '0 auto',                   
     },
+    alert: {
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      height: '30rem',
+      marginBottom: 50,
+      justifyContent: 'center',
+      alignItems: 'center',  
+      textAlign: 'center'               
+    },
+    imageAlert:{
+      position: 'absolute',
+      width:'90%',
+      height: '100%',
+      top: 0      
+    },
+    pAlert:{
+      position: 'absolute',
+      width:'80%',
+      bottom: 25,
+      zIndex: 9,
+      textShadow: '0 0 20px black',
+      fontSize: '1.3rem'
+    }
 }))
 
 
@@ -40,31 +66,34 @@ const Products = () => {
     const {prod} = useParams()
     const classes = useStyles()
     const [products, setProducts] = useState([])
-    const [loader, setLoader] = useState('block')
-    const [produtos, setProdutos] = useState([])
+    const [loader, setLoader] = useState('block') 
     const [prodId, setProdId] = useState([])
     const [images, setImages] = useState([])
-    const [searchTipo, setSearchTipo] = useState()
-    const [searchCategoria, setSearchCategoria] = useState()
     const [refresh, setRefresh] = useState(false)
+    const [alert, setAlert] = useState(false)
     
     
     useEffect(() => {                                 
       fetchProdutos()
       listItem()
-    }, [refresh])
+    }, [refresh])    
 
 
     /******Função que faz o Get dos produtos******/ 
     async function fetchProdutos() {                 
       let ref = db.collection(`produtoss`).where('categoria', '==', prod)
       ref.get()        
-        .then((snapshot) => {             
-          snapshot.forEach((doc) => {                         
-            setProducts(prevState => [...prevState, doc.data()])   
-            setProdId(prevState => [...prevState, doc.id]) 
-            setLoader('none')   
-          })                    
+        .then((snapshot) => {
+          if(snapshot.size > 0){
+            snapshot.forEach((doc) => {                         
+              setProducts(prevState => [...prevState, doc.data()])   
+              setProdId(prevState => [...prevState, doc.id]) 
+              setLoader('none')   
+            })
+          } else {
+            setLoader('none') 
+            setAlert(true)
+          }
         })        
     }
 
@@ -97,8 +126,8 @@ const Products = () => {
 
     
     //Função que remove os produtos    
-    const handleRemoveProduct = (id, image) => {  
-        db.collection(`produtoss`).doc(id).delete()
+    const handleRemoveProduct = async (id, image) => {  
+        await db.collection(`produtoss`).doc(id).delete()
         .then(() => {
           alert("Excluido com sucesso")          
         })
@@ -107,7 +136,7 @@ const Products = () => {
     
         /*****Delete storage*****/
         const storage = getStorage()      
-        image.map((file)=>{
+        await image.map((file)=>{
           const desertRef = ref(storage, file.referencia.fullPath);      
           deleteObject(desertRef)
           .then(() => {   
@@ -116,7 +145,9 @@ const Products = () => {
           }).catch((error) => {
             console.log(error)
           });
-        })        
+        })    
+        
+        window.location.reload()
     }
 
 
@@ -149,7 +180,13 @@ const Products = () => {
             <div style={{display: loader}} >
                 <ReactLoading className={classes.loading} type={'bars'} color= {'black'} height= {'15%'} width= {'40%'}  /* style={{display: loader}} */ />
             </div>
-            
+            {
+              alert &&
+              <div className={classes.alert}>
+                <img className={classes.imageAlert} src={opss} alt='ooops' />
+                <p className={classes.pAlert}>No momento não existem produtos para esse categoria.</p>
+              </div>
+            }
             <Grid container className={classes.items}>
             {
                 products.map((item, index) => (
